@@ -1,0 +1,535 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="bpIRZ_prj_KPA.Activity2"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:hwa="clr-namespace:Hhi.WWF.ActivityLibrary;assembly=Hhi.WWF.ActivityLibrary"
+ xmlns:hwea="clr-namespace:Hhi.WWF.Engine.AmberAPI;assembly=Hhi.WWF.Engine.AmberAPI"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="SysUserId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysInstanceId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysObjectCode" Type="InArgument(x:String)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>bpIRZ_prj_KPA.Activity1_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>Hhi.WWF.Engine.AmberAPI</x:String>
+      <x:String>Hhi.WWF.ActivityLibrary</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Hhi.WWF.ActivityLibrary</AssemblyReference>
+      <AssemblyReference>Hhi.WWF.Engine.AmberAPI</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>bpIRZ_prj_KPA</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>bpIRZ_prj_Tasks</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart DisplayName="Project BP - Next task creation" sap2010:WorkflowViewState.IdRef="Flowchart_8">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="ProjectStatusInfo" />
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="ProjectStagesInfo" />
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="TaskInfo" />
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="TaskList" />
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="NextTaskList" />
+      <Variable x:TypeArguments="x:Int32" Name="NextTaskOrder" />
+      <Variable x:TypeArguments="x:Int32" Name="TaskId" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_62">
+        <hwa:Select DisplayName="(S) Load TaskInfo" sap2010:WorkflowViewState.IdRef="Select_10" Limit="Single" Query="select &#xA; a.Owner as OwnerId,&#xA; a.Project as ProjectId,&#xA; a.Name as Name,&#xA; b.Code as TaskStatus,&#xA; a.Process as BPCode,&#xA; a.ProcessStep as BPStep,&#xA; t.TaskOrder as TaskOrder,&#xA; t.Probability as Probability,&#xA; t1.TaskOrder as NextTaskOrder,&#xA; pa.Code as ProjectAffecting,&#xA; a.CloseReason as CloseReason&#xA;&#xA;from &#xA; Tasks a &#xA; left join TaskStatus b on a.Status = b.Id&#xA; left join ProjectBPs bp on a.Process = bp.Code&#xA; left join BPTemplates t on bp.id = t.BPCode and a.ProcessStep = t.Code&#xA; left join BPTemplates t1 on a.ProcessStep_Next = t1.id&#xA; left join BPTask_ProjectAffecting pa on a.ProjectAffecting = pa.Id&#xA;&#xA;where a.id = @TaskId">
+          <hwa:Select.Params>
+            <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
+            {
+                { "@TaskId", SysInstanceId }
+            }</mca:CSharpValue>
+            </InArgument>
+          </hwa:Select.Params>
+          <hwa:Select.Result>
+            <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+              <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">TaskInfo</mca:CSharpReference>
+            </OutArgument>
+          </hwa:Select.Result>
+        </hwa:Select>
+        <FlowStep.Next>
+          <FlowDecision x:Name="__ReferenceID3" DisplayName="Is BP task? " sap2010:WorkflowViewState.IdRef="FlowDecision_2">
+            <FlowDecision.Condition>
+              <mca:CSharpValue x:TypeArguments="x:Boolean" xml:space="preserve">(TaskInfo.Single()["BPCode"] != null) &amp;&amp;
+((string)TaskInfo.Single()["BPCode"] != "pbpNone")
+/*
+( ((string)TaskInfo.Single()["TaskStatus"] == "tsIsDone") ||
+  ((string)TaskInfo.Single()["TaskStatus"] == "tsCancaled")
+) 
+&amp;&amp; */</mca:CSharpValue>
+            </FlowDecision.Condition>
+            <FlowDecision.True>
+              <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_61">
+                <Sequence DisplayName="Load ref Books" sap2010:WorkflowViewState.IdRef="Sequence_17">
+                  <hwa:Select DisplayName="(S) Load &quot;ProjectStatus&quot;" sap2010:WorkflowViewState.IdRef="Select_11" Query="select Code, Id&#xA;from ProjectStatus">
+                    <hwa:Select.Result>
+                      <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+                        <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">ProjectStatusInfo</mca:CSharpReference>
+                      </OutArgument>
+                    </hwa:Select.Result>
+                  </hwa:Select>
+                  <hwa:Select DisplayName="(S) Load &quot;ProjectStage&quot; (Probability)" sap2010:WorkflowViewState.IdRef="Select_12" Query="select Id, Code, Name, Probability&#xA;from ProjectStage">
+                    <hwa:Select.Result>
+                      <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+                        <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">ProjectStagesInfo</mca:CSharpReference>
+                      </OutArgument>
+                    </hwa:Select.Result>
+                  </hwa:Select>
+                </Sequence>
+                <FlowStep.Next>
+                  <FlowSwitch x:TypeArguments="x:String" x:Name="__ReferenceID10" DisplayName="Check TaskStatus:" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_1">
+                    <FlowSwitch.Default>
+                      <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_69">
+                        <hwa:Update DisplayName="(U)ProjectStatus='soActive'; P from current task" sap2010:WorkflowViewState.IdRef="Update_13" Limit="SingleOrEmpty" Query="update Projects &#xA;set &#xA;Status = @ProjectStatus_Active,&#xA;Probability = @Probability,&#xA;ZapushhenBP = 1,&#xA;ProjectCloseDate = Null&#xA;where Id = @ProjectId and @IsProjectAffected = 1">
+                          <hwa:Update.Params>
+                            <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@ProjectStatus_Active", (int)ProjectStatusInfo.Where(Row =&gt; (string)Row["Code"] == "soActive").Single()["Id"] },
+                { "@Probability", (int)TaskInfo.Single()["Probability"] },
+                { "@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@IsProjectAffected", (string)TaskInfo.Single()["ProjectAffecting"] != "tpaNone" ? 1 : 0 }                
+            }</mca:CSharpValue>
+                            </InArgument>
+                          </hwa:Update.Params>
+                        </hwa:Update>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_54">
+                            <hwa:Script SharpCode="{x:Null}" DisplayName="Finish 'bpIRZ_tsk_NextTask'" sap2010:WorkflowViewState.IdRef="Script_2" />
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowSwitch.Default>
+                    <FlowSwitch.Expression>
+                      <mca:CSharpValue x:TypeArguments="x:String">(string)TaskInfo.Single()["TaskStatus"]</mca:CSharpValue>
+                    </FlowSwitch.Expression>
+                    <FlowStep x:Key="tsIsDone" x:Name="__ReferenceID12" sap2010:WorkflowViewState.IdRef="FlowStep_70">
+                      <Assign DisplayName="Define NextTaskOrder value" sap2010:WorkflowViewState.IdRef="Assign_1">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">
+                            <mca:CSharpReference x:TypeArguments="x:Int32">NextTaskOrder</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">
+                            <mca:CSharpValue x:TypeArguments="x:Int32" xml:space="preserve">// Определяем NextTaskOrder: 
+// если NextTaskOrder определено (не NULL) в текущей задаче, 
+// то - берем значение NextTaskOrder из текущей задачи;
+// иначе - вычисляем как порядковый номер (TaskOrder) текущей задачи +1
+TaskInfo.Single()["NextTaskOrder"] != null 
+                ? (int)TaskInfo.Single()["NextTaskOrder"] 
+                : TaskInfo.Single()["TaskOrder"] == null ? -1 : (int)TaskInfo.Single()["TaskOrder"] + 1</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <FlowStep.Next>
+                        <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_66">
+                          <hwa:Select DisplayName="(S) Load next tasks templates" sap2010:WorkflowViewState.IdRef="Select_13" Query="select &#xA;&#xA;a.Code as Code,&#xA;a.TaskOrder as TaskOrder,&#xA;a.Name as Name, &#xA;a.Duration as Duration,&#xA;a.CloseReasonByDefault as CloseReasonByDefault,&#xA;c.Code as Type,&#xA;a.Probability as Probability,&#xA;pa.Id as ProjectAffectingId,&#xA;pa.Code as ProjectAffecting&#xA;&#xA;from &#xA;BPTemplates a&#xA;join ProjectBPs b on a.BPCode = b.Id&#xA;join TaskType c on a.Type = c.Id&#xA;join BPTask_ProjectAffecting pa on a.ProjectAffecting = pa.Id&#xA;&#xA;where b.Code = @BPCode and TaskOrder = @NextTaskOrder">
+                            <hwa:Select.Params>
+                              <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
+            {
+                { "@BPCode", (string)TaskInfo.Single()["BPCode"] },
+                { "@NextTaskOrder", NextTaskOrder }
+            }</mca:CSharpValue>
+                              </InArgument>
+                            </hwa:Select.Params>
+                            <hwa:Select.Result>
+                              <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+                                <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">TaskList</mca:CSharpReference>
+                              </OutArgument>
+                            </hwa:Select.Result>
+                          </hwa:Select>
+                          <FlowStep.Next>
+                            <FlowDecision x:Name="__ReferenceID8" DisplayName="Is any tasks exists?" sap2010:WorkflowViewState.IdRef="FlowDecision_3">
+                              <FlowDecision.Condition>
+                                <mca:CSharpValue x:TypeArguments="x:Boolean" xml:space="preserve">// Если список следующих задач пуст; 
+// И текущая задача на помечена как последняя...
+(TaskList.Count() &gt; 0) 
+ &amp;&amp; ((string)TaskInfo.Single()["ProjectAffecting"] != "tpaFinishProject")</mca:CSharpValue>
+                              </FlowDecision.Condition>
+                              <FlowDecision.True>
+                                <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_64">
+                                  <hwa:Update DisplayName="(U)ProjectStatus='soActive';P from next task" sap2010:WorkflowViewState.IdRef="Update_10" Limit="SingleOrEmpty" Query="update Projects &#xA;set &#xA;Status = @ProjectStatus_Active,&#xA;Probability = @Probability,&#xA;ZapushhenBP = 1,&#xA;ProjectCloseDate = Null&#xA;where Id = @ProjectId and @IsProjectAffected = 1">
+                                    <hwa:Update.Params>
+                                      <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                        <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                {"@ProjectStatus_Active", (int)ProjectStatusInfo.Where(Row =&gt; (string)Row["Code"] == "soActive").Single()["Id"] },                
+                {"@Probability", (int)TaskList.First()["Probability"] },
+                {"@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@IsProjectAffected", (string)TaskInfo.Single()["ProjectAffecting"] != "tpaNone" ? 1 : 0 }
+            }</mca:CSharpValue>
+                                      </InArgument>
+                                    </hwa:Update.Params>
+                                  </hwa:Update>
+                                  <FlowStep.Next>
+                                    <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_63">
+                                      <ParallelForEach x:TypeArguments="hwa:IRow" DisplayName="Create next step tasks (parallel)" sap2010:WorkflowViewState.IdRef="ParallelForEach`1_1">
+                                        <ParallelForEach.Values>
+                                          <InArgument x:TypeArguments="scg:IEnumerable(hwa:IRow)">
+                                            <mca:CSharpValue x:TypeArguments="scg:IEnumerable(hwa:IRow)">TaskList</mca:CSharpValue>
+                                          </InArgument>
+                                        </ParallelForEach.Values>
+                                        <ActivityAction x:TypeArguments="hwa:IRow">
+                                          <ActivityAction.Argument>
+                                            <DelegateInArgument x:TypeArguments="hwa:IRow" Name="item" />
+                                          </ActivityAction.Argument>
+                                          <hwa:Task DisplayName="Create task" sap2010:WorkflowViewState.IdRef="Task_14" StatusTask="tsInWork">
+                                            <hwa:Task.Dependency>
+                                              <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                                <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
+            {
+                { "Project", (int)TaskInfo.Single()["ProjectId"] },
+                { "CloseReasonByDefault", (string)item["CloseReasonByDefault"] },
+                { "Process", (string)TaskInfo.Single()["BPCode"] },
+                { "ProcessStep", (string)item["Code"] },
+                { "ProjectAffecting", (int)item["ProjectAffectingId"] },
+                { "DaysToDueDate", -(int)item["Duration"] } 
+            }</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.Dependency>
+                                            <hwa:Task.Duration>
+                                              <InArgument x:TypeArguments="x:TimeSpan">
+                                                <mca:CSharpValue x:TypeArguments="x:TimeSpan">new TimeSpan((int)item["Duration"], 0, 0, 0)</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.Duration>
+                                            <hwa:Task.Name>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.Name>
+                                            <hwa:Task.Owner>
+                                              <InArgument x:TypeArguments="x:Int32">
+                                                <mca:CSharpValue x:TypeArguments="x:Int32">(int)TaskInfo.Single()["OwnerId"]</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.Owner>
+                                            <hwa:Task.TaskId>
+                                              <OutArgument x:TypeArguments="x:Int32">
+                                                <mca:CSharpReference x:TypeArguments="x:Int32">TaskId</mca:CSharpReference>
+                                              </OutArgument>
+                                            </hwa:Task.TaskId>
+                                            <hwa:Task.TaskTarget>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.TaskTarget>
+                                            <hwa:Task.TypeTask>
+                                              <InArgument x:TypeArguments="x:String">
+                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Type"]</mca:CSharpValue>
+                                              </InArgument>
+                                            </hwa:Task.TypeTask>
+                                          </hwa:Task>
+                                        </ActivityAction>
+                                      </ParallelForEach>
+                                      <FlowStep.Next>
+                                        <x:Reference>__ReferenceID0</x:Reference>
+                                      </FlowStep.Next>
+                                    </FlowStep>
+                                  </FlowStep.Next>
+                                </FlowStep>
+                              </FlowDecision.True>
+                              <FlowDecision.False>
+                                <FlowStep x:Name="__ReferenceID9" sap2010:WorkflowViewState.IdRef="FlowStep_65">
+                                  <hwa:Update DisplayName="(U)ProjectStatus='soSuccessful';P=100%" sap2010:WorkflowViewState.IdRef="Update_11" Limit="SingleOrEmpty" Query="update Projects &#xA;set &#xA;Status = @ProjectStatus_Successful,&#xA;Probability = @Probability,&#xA;ProjectCloseDate = @ProjectCloseDate&#xA;where Id = @ProjectId and @IsProjectAffected = 1">
+                                    <hwa:Update.Params>
+                                      <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                        <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@ProjectStatus_Successful", (int)ProjectStatusInfo.Where( row =&gt; (string)row["Code"] == "soSuccessful" ).Single()["Id"] },
+                { "@Probability", (int)ProjectStagesInfo.Where(Row =&gt; (string)Row["Code"] == "os100").Single()["Id"] },
+                { "@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@IsProjectAffected", (string)TaskInfo.Single()["ProjectAffecting"] != "tpaNone" ? 1 : 0 },
+                { "@ProjectCloseDate", DateTime.UtcNow }
+            }</mca:CSharpValue>
+                                      </InArgument>
+                                    </hwa:Update.Params>
+                                  </hwa:Update>
+                                  <FlowStep.Next>
+                                    <x:Reference>__ReferenceID0</x:Reference>
+                                  </FlowStep.Next>
+                                </FlowStep>
+                              </FlowDecision.False>
+                            </FlowDecision>
+                          </FlowStep.Next>
+                        </FlowStep>
+                      </FlowStep.Next>
+                    </FlowStep>
+                    <FlowStep x:Key="tsCancaled" x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_67">
+                      <hwa:Update DisplayName="(U)ProjectStatus='soFailed'" sap2010:WorkflowViewState.IdRef="Update_12" Limit="SingleOrEmpty" Query="update Projects&#xA;set &#xA;Status = @ProjectStatus_Failed,&#xA;RejectReason = @RejectReason,&#xA;ProjectCloseDate = @ProjectCloseDate&#xA;where Id = @ProjectId and @IsProjectAffected = 1">
+                        <hwa:Update.Params>
+                          <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                            <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@ProjectStatus_Failed", (int)ProjectStatusInfo.Where(row =&gt; (string)row["Code"] == "soFailed").Single()["Id"] },
+                { "@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@RejectReason", "Отмена задачи '" + (string)TaskInfo.Single()["Name"] + "' по причине '" + (string)TaskInfo.Single()["CloseReason"] + "'" },
+                { "@IsProjectAffected", (string)TaskInfo.Single()["ProjectAffecting"] != "tpaNone" ? 1 : 0 },
+                { "@ProjectCloseDate", DateTime.UtcNow }
+            }</mca:CSharpValue>
+                          </InArgument>
+                        </hwa:Update.Params>
+                      </hwa:Update>
+                      <FlowStep.Next>
+                        <x:Reference>__ReferenceID0</x:Reference>
+                      </FlowStep.Next>
+                    </FlowStep>
+                    <FlowStep x:Key="tsFrozen" x:Name="__ReferenceID13" sap2010:WorkflowViewState.IdRef="FlowStep_71">
+                      <hwa:Update DisplayName="(U)ProjectStatus='soFrozen'; P from current task" sap2010:WorkflowViewState.IdRef="Update_14" Limit="SingleOrEmpty" Query="update Projects &#xA;set &#xA;Status = @ProjectStatus_Frozen,&#xA;Probability = @Probability,&#xA;ZapushhenBP = 1,&#xA;ProjectCloseDate = Null&#xA;where Id = @ProjectId and @IsProjectAffected = 1">
+                        <hwa:Update.Params>
+                          <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                            <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@ProjectStatus_Frozen", (int)ProjectStatusInfo.Where(Row =&gt; (string)Row["Code"] == "soFrozen").Single()["Id"] },
+                { "@Probability", (int)TaskInfo.Single()["Probability"] },
+                { "@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@IsProjectAffected", (string)TaskInfo.Single()["ProjectAffecting"] != "tpaNone" ? 1 : 0 }                
+            }</mca:CSharpValue>
+                          </InArgument>
+                        </hwa:Update.Params>
+                      </hwa:Update>
+                      <FlowStep.Next>
+                        <x:Reference>__ReferenceID0</x:Reference>
+                      </FlowStep.Next>
+                    </FlowStep>
+                  </FlowSwitch>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowDecision.True>
+            <FlowDecision.False>
+              <x:Reference>__ReferenceID0</x:Reference>
+            </FlowDecision.False>
+          </FlowDecision>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <x:Reference>__ReferenceID7</x:Reference>
+    <x:Reference>__ReferenceID8</x:Reference>
+    <x:Reference>__ReferenceID9</x:Reference>
+    <x:Reference>__ReferenceID10</x:Reference>
+    <x:Reference>__ReferenceID11</x:Reference>
+    <x:Reference>__ReferenceID12</x:Reference>
+    <x:Reference>__ReferenceID13</x:Reference>
+    <sads:DebugSymbol.Symbol>d1NEOlx+UHJvamVjdHNcQW1iZXJcQW1iZXJJUlpfQWN0aXZpdHlMaWJyYXJ5XGJwSVJaX3Byal9UYXNrc1xicElSWl90c2tfTmV4dFRhc2sueGFtbCg0A94CDwIBAUAJThYDAYkCUg9YIAMB/gF/HX+VAQMB/QFcEWscAwHkAYUBF4UBfAMB2QFwGXwmAwHNAbMCF78CJAMBwQGgAhetAiQDAbUBiAEXmQEgAwGeAZwBG6sBKAMBhwGvASGyAWQCAXyHAiOUAjACAXC2ASPCATACAWTFASf9ATkCAQJDD0YgAwGVAksPS3YDAYoCXRNjIAMB8QFkE2ogAwHlAXMfeSADAc4BtgIdvAIgAwHCAaMCHaoCIAMBtgGQAR2WAXoDAaoBiwEdiwFvAwGfAZ8BIaMBIAMBkwGoASGoAYgBAwGIAYoCKZECIAIBcbkBKb8BIAIBZcgBLcgBhAECAVnPASv7ATYCAQNgGWCJAQMB8gFnGWeJAQMB5gH4ATH4AYMBAgFN6QEx6QGPAQIBQfMBMfMBgwECATXuATHuAXwCASnPAYQBzwGOAQIBKNIBMdoBIAIBHOQBMeQBgwECARDfATHfAZ0BAgEE</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Select_11" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Select_12" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_17" sap:VirtualizedContainerService.HintSize="244,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_13" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Script_2" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_54">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">420,1289</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_69">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">590,709</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">690,731 690,1259 520,1259 520,1289</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Select_13" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Task_14" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ParallelForEach`1_1" sap:VirtualizedContainerService.HintSize="244,51" />
+      <sap2010:ViewStateData Id="FlowStep_63">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">58,1084.5</av:Point>
+            <av:Size x:Key="ShapeSize">244,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">180,1135.5 180,1165.5 520,1165.5 520,1289</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_64">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">80,1029</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">180,1051 180,1084.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_11" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_65">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">350,1029</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">450,1051 450,1081 520,1081 520,1289</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="99,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">240.5,906.5</av:Point>
+            <av:Size x:Key="ShapeSize">99,87</av:Size>
+            <av:PointCollection x:Key="TrueConnector">240.5,950 180,950 180,1029</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">339.5,950 450,950 450,1029</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_66">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">190,809</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">290,831 290,906.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_70">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">169,719</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">290,781 290,809</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_12" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_67">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">710,629</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">810,651 810,1259 520,1259 520,1289</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_14" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_71">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">470,779</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">570,801 570,1259 520,1259 520,1289</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowSwitch`1_1" sap:VirtualizedContainerService.HintSize="98,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">340,496.5</av:Point>
+            <av:Size x:Key="ShapeSize">98,87</av:Size>
+            <av:PointCollection x:Key="tsCancaledConnector">438,518.25 810,518.25 810,629</av:PointCollection>
+            <av:PointCollection x:Key="tsIsDoneConnector">340,518.25 290,518.25 290,719</av:PointCollection>
+            <av:PointCollection x:Key="Default">438,540 690,540 690,709</av:PointCollection>
+            <av:PointCollection x:Key="tsFrozenConnector">438,561.75 570,561.75 570,779</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_61">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">268,424.5</av:Point>
+            <av:Size x:Key="ShapeSize">244,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">390,475.5 390,496.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="70,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">345,246.5</av:Point>
+            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <av:PointCollection x:Key="FalseConnector">415,290 930,290 930,1259 520,1259 520,1289</av:PointCollection>
+            <av:PointCollection x:Key="TrueConnector">345,290 294,290 294,394.5 390,394.5 390,424.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">280,149</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,171 380,246.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1054,2227">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">350,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,77.5 380,149</av:PointCollection>
+            <x:Double x:Key="Width">1040</x:Double>
+            <x:Double x:Key="Height">2191</x:Double>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1094,2307" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

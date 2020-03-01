@@ -1,0 +1,353 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="bpIRZ_prj_KPA.Activity2"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:hwa="clr-namespace:Hhi.WWF.ActivityLibrary;assembly=Hhi.WWF.ActivityLibrary"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="SysUserId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysInstanceId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysObjectCode" Type="InArgument(x:String)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>bpIRZ_prj_KPA.Activity1_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>Hhi.WWF.Engine.AmberAPI</x:String>
+      <x:String>Hhi.WWF.ActivityLibrary</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Hhi.WWF.ActivityLibrary</AssemblyReference>
+      <AssemblyReference>Hhi.WWF.Engine.AmberAPI</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>bpIRZ_prj_Tasks</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart DisplayName="OverduedTasksReminder" sap2010:WorkflowViewState.IdRef="Flowchart_8">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="DBEmailList" />
+      <Variable x:TypeArguments="scg:IList(x:String)" Name="EmailListOne">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:IList(x:String)">new List&lt;String&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+      <Variable x:TypeArguments="scg:IList(x:String)" Name="EmailListTwo">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:IList(x:String)">new List&lt;String&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_62">
+        <hwa:Select DisplayName="(S) Load EmailList from DB" sap2010:WorkflowViewState.IdRef="Select_10" Query="select &#xA; b.Email as Email,&#xA; b.Priority as Priority&#xA;from TaskPostponementReminderList b">
+          <hwa:Select.Result>
+            <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+              <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">DBEmailList</mca:CSharpReference>
+            </OutArgument>
+          </hwa:Select.Result>
+        </hwa:Select>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_75">
+            <ForEach x:TypeArguments="hwa:IRow" DisplayName="Fill Email Lists" sap2010:WorkflowViewState.IdRef="ForEach`1_1">
+              <ForEach.Values>
+                <InArgument x:TypeArguments="scg:IEnumerable(hwa:IRow)">
+                  <mca:CSharpValue x:TypeArguments="scg:IEnumerable(hwa:IRow)">DBEmailList</mca:CSharpValue>
+                </InArgument>
+              </ForEach.Values>
+              <ActivityAction x:TypeArguments="hwa:IRow">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="hwa:IRow" Name="item" />
+                </ActivityAction.Argument>
+                <If sap2010:WorkflowViewState.IdRef="If_3">
+                  <If.Condition>
+                    <InArgument x:TypeArguments="x:Boolean">
+                      <mca:CSharpValue x:TypeArguments="x:Boolean">item["Email"] != null</mca:CSharpValue>
+                    </InArgument>
+                  </If.Condition>
+                  <If.Then>
+                    <If sap2010:WorkflowViewState.IdRef="If_2">
+                      <If.Condition>
+                        <InArgument x:TypeArguments="x:Boolean">
+                          <mca:CSharpValue x:TypeArguments="x:Boolean">(int)item["Priority"] == 1</mca:CSharpValue>
+                        </InArgument>
+                      </If.Condition>
+                      <If.Then>
+                        <AddToCollection x:TypeArguments="x:String" DisplayName="Add To EMailListOne&lt;String&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_5">
+                          <AddToCollection.Item>
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">(string)item["Email"]</mca:CSharpValue>
+                            </InArgument>
+                          </AddToCollection.Item>
+                          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+                            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListOne</mca:CSharpValue>
+                          </InArgument>
+                        </AddToCollection>
+                      </If.Then>
+                      <If.Else>
+                        <AddToCollection x:TypeArguments="x:String" DisplayName="Add To EMailListTwo&lt;String&gt;" sap2010:WorkflowViewState.IdRef="AddToCollection`1_6">
+                          <AddToCollection.Item>
+                            <InArgument x:TypeArguments="x:String">
+                              <mca:CSharpValue x:TypeArguments="x:String">(string)item["Email"]</mca:CSharpValue>
+                            </InArgument>
+                          </AddToCollection.Item>
+                          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+                            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListTwo</mca:CSharpValue>
+                          </InArgument>
+                        </AddToCollection>
+                      </If.Else>
+                    </If>
+                  </If.Then>
+                </If>
+              </ActivityAction>
+            </ForEach>
+            <FlowStep.Next>
+              <FlowDecision x:Name="__ReferenceID5" DisplayName="EmailListOne.Count &gt; 0" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
+                <FlowDecision.Condition>
+                  <mca:CSharpValue x:TypeArguments="x:Boolean">EmailListOne.Count &gt; 0</mca:CSharpValue>
+                </FlowDecision.Condition>
+                <FlowDecision.True>
+                  <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_74">
+                    <hwa:SendEmail Body="У Вас появились задачи, срок завершения которых подошел к концу. Для их просмотра перейдите по ссылке https://crm.irz.ru:8443/registry/Activity" DisplayName="SendEmail (EmailListOne)" sap2010:WorkflowViewState.IdRef="SendEmail_1" Subject="Amber. Задачи, требующие переноса">
+                      <hwa:SendEmail.Credential>
+                        <InArgument x:TypeArguments="hwa:EmailCredential">
+                          <mca:CSharpValue x:TypeArguments="hwa:EmailCredential" xml:space="preserve">// new EmailCredentialUser(1)
+new EmailCredentialDefault()</mca:CSharpValue>
+                        </InArgument>
+                      </hwa:SendEmail.Credential>
+                      <hwa:SendEmail.To>
+                        <InArgument x:TypeArguments="scg:IReadOnlyCollection(x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:IReadOnlyCollection(x:String)">(IReadOnlyCollection&lt;String&gt;)EmailListOne</mca:CSharpValue>
+                        </InArgument>
+                      </hwa:SendEmail.To>
+                    </hwa:SendEmail>
+                    <FlowStep.Next>
+                      <FlowDecision x:Name="__ReferenceID1" DisplayName="EmailListTwo.Count &gt; 0" sap2010:WorkflowViewState.IdRef="FlowDecision_6">
+                        <FlowDecision.Condition>
+                          <mca:CSharpValue x:TypeArguments="x:Boolean">EmailListTwo.Count &gt; 0</mca:CSharpValue>
+                        </FlowDecision.Condition>
+                        <FlowDecision.True>
+                          <FlowStep x:Name="__ReferenceID6" sap2010:WorkflowViewState.IdRef="FlowStep_77">
+                            <hwa:SendEmail Body="У Вас есть просроченные задачи! Необходимо срочно перейти по ссылке https://crm.irz.ru:8443/registry/Activity" DisplayName="SendEmail (EmailListTwo)" sap2010:WorkflowViewState.IdRef="SendEmail_3" Subject="Amber. Посроченные задачи!">
+                              <hwa:SendEmail.Credential>
+                                <InArgument x:TypeArguments="hwa:EmailCredential">
+                                  <mca:CSharpValue x:TypeArguments="hwa:EmailCredential" xml:space="preserve">// new EmailCredentialUser(1)
+new EmailCredentialDefault()</mca:CSharpValue>
+                                </InArgument>
+                              </hwa:SendEmail.Credential>
+                              <hwa:SendEmail.To>
+                                <InArgument x:TypeArguments="scg:IReadOnlyCollection(x:String)">
+                                  <mca:CSharpValue x:TypeArguments="scg:IReadOnlyCollection(x:String)">(IReadOnlyCollection&lt;String&gt;)EmailListTwo</mca:CSharpValue>
+                                </InArgument>
+                              </hwa:SendEmail.To>
+                            </hwa:SendEmail>
+                            <FlowStep.Next>
+                              <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_72">
+                                <hwa:Script SharpCode="{x:Null}" DisplayName="Finish 'bpIRZ_auto_OverduedTasksReminder'" sap2010:WorkflowViewState.IdRef="Script_3" />
+                              </FlowStep>
+                            </FlowStep.Next>
+                          </FlowStep>
+                        </FlowDecision.True>
+                        <FlowDecision.False>
+                          <x:Reference>__ReferenceID0</x:Reference>
+                        </FlowDecision.False>
+                      </FlowDecision>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowDecision.True>
+                <FlowDecision.False>
+                  <x:Reference>__ReferenceID1</x:Reference>
+                </FlowDecision.False>
+              </FlowDecision>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <FlowStep sap2010:WorkflowViewState.IdRef="FlowStep_78">
+      <Sequence DisplayName="Fill TEST email list" sap2010:WorkflowViewState.IdRef="Sequence_1">
+        <ClearCollection x:TypeArguments="x:String" DisplayName="Clear EmailListOne" sap2010:WorkflowViewState.IdRef="ClearCollection`1_1">
+          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListOne</mca:CSharpValue>
+          </InArgument>
+        </ClearCollection>
+        <ClearCollection x:TypeArguments="x:String" DisplayName="Clear EmailListTwo" sap2010:WorkflowViewState.IdRef="ClearCollection`1_2">
+          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListTwo</mca:CSharpValue>
+          </InArgument>
+        </ClearCollection>
+        <AddToCollection x:TypeArguments="x:String" DisplayName="AddTo EmailListOne" sap2010:WorkflowViewState.IdRef="AddToCollection`1_3" Item="rykov.ae@irz.ru">
+          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListOne</mca:CSharpValue>
+          </InArgument>
+        </AddToCollection>
+        <AddToCollection x:TypeArguments="x:String" DisplayName="AddTo EmailListTwo" sap2010:WorkflowViewState.IdRef="AddToCollection`1_4" Item="rykov.ae@irz.ru">
+          <InArgument x:TypeArguments="scg:ICollection(x:String)">
+            <mca:CSharpValue x:TypeArguments="scg:ICollection(x:String)">EmailListTwo</mca:CSharpValue>
+          </InArgument>
+        </AddToCollection>
+      </Sequence>
+    </FlowStep>
+    <sads:DebugSymbol.Symbol>d2FEOlx+UHJvamVjdHNcQW1iZXJcQW1iZXJJUlpfQWN0aXZpdHlMaWJyYXJ5XGJwSVJaX3Byal9UYXNrc1xicElSWl9hdXRvX092ZXJkdWVkVGFza3NSZW1pbmRlci54YW1sHjID3gEPAgEBNws3bAIBCTwLPGwCAQJCCUgWAgF9Sw1+FwIBQYIBE4IBawIBOpYBG5YBcwIBM6kBIakBpwECATKaAR2mAS0CASGGARWSASUCARBFD0V5AgF+ThNObQIBdlURfBYCAUKdASOeAS8CASujASOjAakBAgEkmgExmgGgAQIBI5oB/gGaAZoCAgEiiQEbigEvAgEajwEbjwGhAQIBE4YBKYYBugECARKGAZgChgG7AgIBEVgXWGsCAUNcFXoaAgFLXxtfdAIBTGMZbCsCAWVvGXgrAgFUah1qeAIBbmYfZnICAWZ2HXZ4AgFdch9ycgIBVQ==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_5" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_6" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="464,210" />
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="655,360" />
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="244,51" />
+      <sap2010:ViewStateData Id="SendEmail_1" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="SendEmail_3" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Script_3" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_72">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">270,839</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_77">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">160,679</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">260,701 260,731 370,731 370,839</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_6" sap:VirtualizedContainerService.HintSize="129,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">315.5,556.5</av:Point>
+            <av:Size x:Key="ShapeSize">129,87</av:Size>
+            <av:PointCollection x:Key="TrueConnector">315.5,600 260,600 260,679</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">444.5,600 460,600 460,809 370,809 370,839</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_74">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">170,449</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">270,471 270,501 347.75,501 347.75,556.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_5" sap:VirtualizedContainerService.HintSize="129,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">315.5,306.5</av:Point>
+            <av:Size x:Key="ShapeSize">129,87</av:Size>
+            <av:PointCollection x:Key="TrueConnector">315.5,350 270,350 270,449</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">444.5,350 472.25,350 472.25,526.5 412.25,526.5 412.25,556.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_75">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">258,184.5</av:Point>
+            <av:Size x:Key="ShapeSize">244,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,235.5 380,306.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">280,119</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,141 380,184.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ClearCollection`1_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="ClearCollection`1_2" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_3" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="AddToCollection`1_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="244,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_78">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">627.091666666667,204.02</av:Point>
+            <av:Size x:Key="ShapeSize">244,51</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1054,2227">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">350,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,77.5 380,119</av:PointCollection>
+            <x:Double x:Key="Width">1040</x:Double>
+            <x:Double x:Key="Height">2191</x:Double>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1094,2307" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

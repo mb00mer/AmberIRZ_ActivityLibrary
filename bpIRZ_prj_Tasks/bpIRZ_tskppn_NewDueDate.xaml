@@ -1,0 +1,487 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="bpIRZ_prj_KPA.Activity2"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:hwa="clr-namespace:Hhi.WWF.ActivityLibrary;assembly=Hhi.WWF.ActivityLibrary"
+ xmlns:hwea="clr-namespace:Hhi.WWF.Engine.AmberAPI;assembly=Hhi.WWF.Engine.AmberAPI"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="SysUserId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysInstanceId" Type="InArgument(x:Int32)" />
+    <x:Property Name="SysObjectCode" Type="InArgument(x:String)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>bpIRZ_prj_KPA.Activity1_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>Hhi.WWF.Engine.AmberAPI</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Hhi.WWF.ActivityLibrary</AssemblyReference>
+      <AssemblyReference>Hhi.WWF.Engine.AmberAPI</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>bpIRZ_prj_KPA</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>bpIRZ_prj_Tasks</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart DisplayName="Task Postponement" sap2010:WorkflowViewState.IdRef="Flowchart_8">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="TaskPostponeInfo" />
+      <Variable x:TypeArguments="s:DateTimeOffset" Name="NewDueDate" />
+      <Variable x:TypeArguments="x:Int32" Name="CancelStatusId" />
+      <Variable x:TypeArguments="x:Int32" Name="FrozenStatusId" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_62">
+        <hwa:Select DisplayName="(S) Load TaskPostponeInfo" sap2010:WorkflowViewState.IdRef="Select_10" Limit="Single" Query="select &#xA; a.Task as TaskId,&#xA; a.Description as Description,&#xA; a.ApprovementStatus as Status,&#xA; a.NewDate as NewDueDate,&#xD;&#xA; a.NewStartDate as NewStartDate,&#xA; a.ApproveDate as ApproveDate,&#xA; a.ApprovedBy as ApprovedBy&#xA;from TaskPostponements a&#xA;where a.id = @TaskPostponeId">
+          <hwa:Select.Params>
+            <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
+            {
+                { "@TaskPostponeId", SysInstanceId }
+            }</mca:CSharpValue>
+            </InArgument>
+          </hwa:Select.Params>
+          <hwa:Select.Result>
+            <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+              <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">TaskPostponeInfo</mca:CSharpReference>
+            </OutArgument>
+          </hwa:Select.Result>
+        </hwa:Select>
+        <FlowStep.Next>
+          <FlowDecision x:Name="__ReferenceID3" DisplayName="Is Postpone Checked?" sap2010:WorkflowViewState.IdRef="FlowDecision_4">
+            <FlowDecision.Condition>
+              <mca:CSharpValue x:TypeArguments="x:Boolean" xml:space="preserve">(TaskPostponeInfo.Single()["Status"] != null) 
+&amp;&amp; (TaskPostponeInfo.Single()["ApprovedBy"] == null)</mca:CSharpValue>
+            </FlowDecision.Condition>
+            <FlowDecision.True>
+              <FlowStep x:Name="__ReferenceID10" sap2010:WorkflowViewState.IdRef="FlowStep_80">
+                <hwa:Update DisplayName="(U) Set ApproveDate &amp; ApprovedBy" sap2010:WorkflowViewState.IdRef="Update_19" Query="update TaskPostponements&#xA;set &#xA; ApproveDate = @ApproveDate,&#xA; ApprovedBy = @ApprovedBy&#xA;where Id = @TaskPostponeId">
+                  <hwa:Update.Params>
+                    <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                      <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskPostponeId", SysInstanceId },
+                { "@ApproveDate", DateTime.UtcNow },
+                { "@ApprovedBy", SysUserId } 
+            }</mca:CSharpValue>
+                    </InArgument>
+                  </hwa:Update.Params>
+                </hwa:Update>
+                <FlowStep.Next>
+                  <FlowSwitch x:TypeArguments="x:Int32" x:Name="__ReferenceID6" DisplayName="Check Ppn decision" sap2010:WorkflowViewState.IdRef="FlowSwitch`1_1">
+                    <FlowSwitch.Default>
+                      <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_79">
+                        <hwa:Update DisplayName="(U) Set Task.IsPpnCreated = 0" sap2010:WorkflowViewState.IdRef="Update_20" Query="update Tasks&#xA;set &#xA; IsPpnCreated = 0&#xA;where Id = @TaskId">
+                          <hwa:Update.Params>
+                            <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", (int)TaskPostponeInfo.Single()["TaskId"] }
+            }</mca:CSharpValue>
+                            </InArgument>
+                          </hwa:Update.Params>
+                        </hwa:Update>
+                        <FlowStep.Next>
+                          <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_72">
+                            <hwa:Script SharpCode="{x:Null}" DisplayName="Finish 'bpIRZ_tskppn_NewDueDate'" sap2010:WorkflowViewState.IdRef="Script_3" />
+                          </FlowStep>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowSwitch.Default>
+                    <FlowSwitch.Expression>
+                      <mca:CSharpValue x:TypeArguments="x:Int32">(int)TaskPostponeInfo.Single()["Status"]</mca:CSharpValue>
+                    </FlowSwitch.Expression>
+                    <FlowStep x:Key="1" x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_74">
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_1">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="s:DateTimeOffset">
+                            <mca:CSharpReference x:TypeArguments="s:DateTimeOffset">NewDueDate</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="s:DateTimeOffset">
+                            <mca:CSharpValue x:TypeArguments="s:DateTimeOffset">(DateTimeOffset)TaskPostponeInfo.Single()["NewDueDate"]</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <FlowStep.Next>
+                        <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_71">
+                          <hwa:Update DisplayName="(U) Set NewDueDate for Task" sap2010:WorkflowViewState.IdRef="Update_14" Query="update Tasks&#xA;set &#xA; DueDate = @NewDueDate,&#xA; DaysToDueDate = @DaysToDueDate,&#xA; IsPpnCreated = 0&#xA;where Id = @TaskId">
+                            <hwa:Update.Params>
+                              <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", (int)TaskPostponeInfo.Single()["TaskId"] },
+                { "@NewDueDate", TaskPostponeInfo.Single()["NewDueDate"] },
+                { "@DaysToDueDate", (DateTime.UtcNow - NewDueDate).Days } 
+            }</mca:CSharpValue>
+                              </InArgument>
+                            </hwa:Update.Params>
+                          </hwa:Update>
+                          <FlowStep.Next>
+                            <x:Reference>__ReferenceID0</x:Reference>
+                          </FlowStep.Next>
+                        </FlowStep>
+                      </FlowStep.Next>
+                    </FlowStep>
+                    <FlowStep x:Key="3" x:Name="__ReferenceID8" sap2010:WorkflowViewState.IdRef="FlowStep_78">
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Int32">
+                            <mca:CSharpReference x:TypeArguments="x:Int32">CancelStatusId</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Int32">83</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <FlowStep.Next>
+                        <FlowStep x:Name="__ReferenceID7" sap2010:WorkflowViewState.IdRef="FlowStep_77">
+                          <hwa:Update DisplayName="(U) Task cancellation" sap2010:WorkflowViewState.IdRef="Update_18" Query="update Tasks&#xA;set &#xA; Status = @CancelStatus,&#xA; CloseReason = @Description,&#xA; IsPpnCreated = 0&#xA;where Id = @TaskId">
+                            <hwa:Update.Params>
+                              <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", (int)TaskPostponeInfo.Single()["TaskId"] },
+                { "@CancelStatus", CancelStatusId },
+                { "@Description", (string)TaskPostponeInfo.Single()["Description"] }
+            }</mca:CSharpValue>
+                              </InArgument>
+                            </hwa:Update.Params>
+                          </hwa:Update>
+                          <FlowStep.Next>
+                            <x:Reference>__ReferenceID0</x:Reference>
+                          </FlowStep.Next>
+                        </FlowStep>
+                      </FlowStep.Next>
+                    </FlowStep>
+                    <FlowStep x:Key="4" x:Name="__ReferenceID14" sap2010:WorkflowViewState.IdRef="FlowStep_83">
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="s:DateTimeOffset">
+                            <mca:CSharpReference x:TypeArguments="s:DateTimeOffset">NewDueDate</mca:CSharpReference>
+                          </OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="s:DateTimeOffset">
+                            <mca:CSharpValue x:TypeArguments="s:DateTimeOffset">(DateTimeOffset)TaskPostponeInfo.Single()["NewDueDate"]</mca:CSharpValue>
+                          </InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <FlowStep.Next>
+                        <FlowStep x:Name="__ReferenceID12" sap2010:WorkflowViewState.IdRef="FlowStep_82">
+                          <Assign sap2010:WorkflowViewState.IdRef="Assign_3">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Int32">
+                                <mca:CSharpReference x:TypeArguments="x:Int32">FrozenStatusId</mca:CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Int32">85</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <FlowStep.Next>
+                            <FlowStep x:Name="__ReferenceID13" sap2010:WorkflowViewState.IdRef="FlowStep_81">
+                              <hwa:Update DisplayName="(U) Task freezing" sap2010:WorkflowViewState.IdRef="Update_21" Query="update Tasks&#xA;set&#xD;&#xA; StartDate = @NewStartDate, &#xA; DueDate = @NewDueDate,&#xA; DaysToDueDate = @DaysToDueDate,&#xD;&#xA; Status = @FrozenStatus,&#xA; IsPpnCreated = 0&#xA;where Id = @TaskId">
+                                <hwa:Update.Params>
+                                  <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                    <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", (int)TaskPostponeInfo.Single()["TaskId"] },
+                { "@FrozenStatus", FrozenStatusId },
+                { "@NewStartDate", TaskPostponeInfo.Single()["NewStartDate"] },
+                { "@NewDueDate", TaskPostponeInfo.Single()["NewDueDate"] },
+                { "@DaysToDueDate", (DateTime.UtcNow - NewDueDate).Days }
+            }</mca:CSharpValue>
+                                  </InArgument>
+                                </hwa:Update.Params>
+                              </hwa:Update>
+                              <FlowStep.Next>
+                                <x:Reference>__ReferenceID0</x:Reference>
+                              </FlowStep.Next>
+                            </FlowStep>
+                          </FlowStep.Next>
+                        </FlowStep>
+                      </FlowStep.Next>
+                    </FlowStep>
+                  </FlowSwitch>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowDecision.True>
+            <FlowDecision.False>
+              <FlowDecision x:Name="__ReferenceID9" DisplayName="Is Ppn Decision == null?" sap2010:WorkflowViewState.IdRef="FlowDecision_5">
+                <FlowDecision.Condition>
+                  <mca:CSharpValue x:TypeArguments="x:Boolean">(TaskPostponeInfo.Single()["Status"] == null)</mca:CSharpValue>
+                </FlowDecision.Condition>
+                <FlowDecision.True>
+                  <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_76">
+                    <hwa:Update DisplayName="(U) Set Tasks.IsPpnCreated = 1" sap2010:WorkflowViewState.IdRef="Update_17" Query="update Tasks&#xA;set &#xA; IsPpnCreated = 1&#xA;where Id = @TaskId">
+                      <hwa:Update.Params>
+                        <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                          <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", (int)TaskPostponeInfo.Single()["TaskId"] }
+            }</mca:CSharpValue>
+                        </InArgument>
+                      </hwa:Update.Params>
+                    </hwa:Update>
+                    <FlowStep.Next>
+                      <x:Reference>__ReferenceID0</x:Reference>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowDecision.True>
+                <FlowDecision.False>
+                  <x:Reference>__ReferenceID0</x:Reference>
+                </FlowDecision.False>
+              </FlowDecision>
+            </FlowDecision.False>
+          </FlowDecision>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID0</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <x:Reference>__ReferenceID5</x:Reference>
+    <x:Reference>__ReferenceID6</x:Reference>
+    <x:Reference>__ReferenceID7</x:Reference>
+    <x:Reference>__ReferenceID8</x:Reference>
+    <x:Reference>__ReferenceID9</x:Reference>
+    <x:Reference>__ReferenceID10</x:Reference>
+    <x:Reference>__ReferenceID11</x:Reference>
+    <x:Reference>__ReferenceID12</x:Reference>
+    <x:Reference>__ReferenceID13</x:Reference>
+    <x:Reference>__ReferenceID14</x:Reference>
+    <sads:DebugSymbol.Symbol>d1hEOlx+UHJvamVjdHNcQW1iZXJcQW1iZXJJUlpfQWN0aXZpdHlMaWJyYXJ5XGJwSVJaX3Byal9UYXNrc1xicElSWl90c2twcG5fTmV3RHVlRGF0ZS54YW1sIDQDnAIPAgEBPQlLFgMBhwFPD1BPAgF/8AET8AF/AgF3cB1wmgECAXb0ARX9ASICAW1UEV8eAgFkdhd2fAIBXGQZbSYCAVO5ARfEASACAULHARvQASQCATjTAR/gASwCAS+aARejASACASWmARuxASgCARx5F4QBIAIBC4cBG5IBKAIBAkAPQyADAZABSA9IfgMBiAH3ARv6ASACAW5XF1wgAgFlZx9qIAIBVMEBHcEBmgECAUu8AR28AXUCAUPOAUXOAUcCAUHKASHKAXQCATnWASXdASACATChAUGhAUMCAS6dAR2dAXACASapASGuASACAR2BAR2BAZoBAgEUfB18dQIBDIoBIY8BIAIBAw==</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_19" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_20" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Script_3" sap:VirtualizedContainerService.HintSize="200,22">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_72">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,979</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_79">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">280,579</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,601 380,631 600,631 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_14" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_71">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">60,579</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">160,601 160,631 600,631 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_74">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">39,479</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">160,541 160,579</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_18" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_77">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">500,579</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">600,601 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_78">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">479,479</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">600,541 600,579</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_21" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_81">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">760,649</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">860,671 860,701 600,701 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_82">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">739,559</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">860,621 860,649</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_83">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">739,479</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">860,541 860,559</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowSwitch`1_1" sap:VirtualizedContainerService.HintSize="108,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">336,396.5</av:Point>
+            <av:Size x:Key="ShapeSize">108,87</av:Size>
+            <av:PointCollection x:Key="1Connector">336,440 160,440 160,479</av:PointCollection>
+            <av:PointCollection x:Key="Default">390,483.5 390,513.5 380,513.5 380,579</av:PointCollection>
+            <av:PointCollection x:Key="3Connector">444,440 600,440 600,479</av:PointCollection>
+            <av:PointCollection x:Key="4Connector">444,418.25 860,418.25 860,479</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_80">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">290,329</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">390,351 390,396.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Update_17" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="FlowStep_76">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">780,859</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">880,881 880,911 600,911 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_5" sap:VirtualizedContainerService.HintSize="131,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">954.5,736.5</av:Point>
+            <av:Size x:Key="ShapeSize">131,87</av:Size>
+            <av:PointCollection x:Key="TrueConnector">954.5,780 880,780 880,859</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">1085.5,780 1110,780 1110,949 600,949 600,979</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="119,87">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">320.5,136.5</av:Point>
+            <av:Size x:Key="ShapeSize">119,87</av:Size>
+            <av:PointCollection x:Key="TrueConnector">320.5,180 300,180 300,299 390,299 390,329</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">439.5,180 1020,180 1020,736.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">280,99</av:Point>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,121 380,136.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1128,2227">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">350,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380,77.5 380,99</av:PointCollection>
+            <x:Double x:Key="Width">1114</x:Double>
+            <x:Double x:Key="Height">2191</x:Double>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1168,2307" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

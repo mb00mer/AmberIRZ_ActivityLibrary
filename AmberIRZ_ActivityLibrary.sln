@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bpIRZ_upd_ProjectContacts", "bpIRZ_upd_ProjectContacts\bpIRZ_upd_ProjectContacts.csproj", "{8523C46F-3450-409F-B4A8-906FA5C8ABBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bpIRZ_prj_Tasks", "bpIRZ_prj_Tasks\bpIRZ_prj_Tasks.csproj", "{7062C40A-5596-44DD-B181-561EB43AB3A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8523C46F-3450-409F-B4A8-906FA5C8ABBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8523C46F-3450-409F-B4A8-906FA5C8ABBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8523C46F-3450-409F-B4A8-906FA5C8ABBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8523C46F-3450-409F-B4A8-906FA5C8ABBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7062C40A-5596-44DD-B181-561EB43AB3A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7062C40A-5596-44DD-B181-561EB43AB3A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7062C40A-5596-44DD-B181-561EB43AB3A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7062C40A-5596-44DD-B181-561EB43AB3A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F48CC0EF-3E7D-4C5F-87FC-7DE9F4C9045D}
+	EndGlobalSection
+EndGlobal
