@@ -54,13 +54,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="bpIRZ_upd_ProjectConracts.xaml">
-      <SubType>Designer</SubType>
+    <XamlAppDef Include="BusinessProcess.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </XamlAppDef>
   </ItemGroup>
   <ItemGroup>
-    <XamlAppDef Include="BusinessProcess.xaml">
+    <XamlAppDef Include="bpIRZ_upd_ProjectContacts.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </XamlAppDef>
