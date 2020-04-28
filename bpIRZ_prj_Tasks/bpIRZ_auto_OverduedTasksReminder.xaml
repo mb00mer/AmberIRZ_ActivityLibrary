@@ -60,7 +60,11 @@
           <mca:CSharpValue x:TypeArguments="scg:IList(x:String)">new List&lt;String&gt;()</mca:CSharpValue>
         </Variable.Default>
       </Variable>
-      <Variable x:TypeArguments="scg:IList(x:String)" Name="EmailListThree" />
+      <Variable x:TypeArguments="scg:IList(x:String)" Name="EmailListThree">
+        <Variable.Default>
+          <mca:CSharpValue x:TypeArguments="scg:IList(x:String)">new List&lt;String&gt;()</mca:CSharpValue>
+        </Variable.Default>
+      </Variable>
     </Flowchart.Variables>
     <Flowchart.StartNode>
       <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_62">
@@ -230,7 +234,7 @@ new EmailCredentialDefault()</mca:CSharpValue>
     <x:Reference>__ReferenceID7</x:Reference>
     <x:Reference>__ReferenceID8</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
-    <sads:DebugSymbol.Symbol>d3JDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2F1dG9fT3ZlcmR1ZWRUYXNrc1JlbWluZGVyLnhhbWwnMgPqAQ8CAQE3CzdsAgEKPAs8bAIBAkMJSRYDAboBTA2FARcCAWSJAROJAWsCAVydARudAXMCAVSxASOxAX0CAUzEASnEAa8BAgFLtQElwQE1AgE4oQEdrQEtAgEljQEVmQElAgESRg9GeQMBuwFPE09tAwGyAVYRgwEWAgFluAEruQEvAgFDvgErvgGzAQIBO7UBObUB1AECATq1AbQCtQHcAgIBOaQBI6UBLwIBMKoBI6oBqQECASihATGhAaABAgEnoQH+AaEBmgICASaQARuRAS8CAR2WARuWAaEBAgEVjQEpjQG6AQIBFI0BmAKNAbsCAgETWRdZawIBZl0VgQEeAgFvYBtgbQIBcGMXbCkDAZ8BbRd2KQMBjAF3F4ABKQIBeWobanYDAakBZh1mcAMBoAF0G3R2AwGWAXAdcHADAY0Bfht+eAMBgwF6HXpwAgF6</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d3JDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2F1dG9fT3ZlcmR1ZWRUYXNrc1JlbWluZGVyLnhhbWwoMgPuAQ8CAQE3CzdsAgESPAs8bAIBCkELQWwCAQJHCU0WAwHCAVANiQEXAgFsjQETjQFrAgFkoQEboQFzAgFctQEjtQF9AgFUyAEpyAGvAQIBU7kBJcUBNQIBQKUBHbEBLQIBLZEBFZ0BJQIBGkoPSnkDAcMBUxNTbQMBugFaEYcBFgIBbbwBK70BLwIBS8IBK8IBswECAUO5ATm5AdQBAgFCuQG0ArkB3AICAUGoASOpAS8CATiuASOuAakBAgEwpQExpQGgAQIBL6UB/gGlAZoCAgEulAEblQEvAgElmgEbmgGhAQIBHZEBKZEBugECARyRAZgCkQG7AgIBG10XXWsCAW5hFYUBHgIBd2QbZG0CAXhnF3ApAwGnAXEXeikDAZQBexeEASkDAYEBbhtudgMBsQFqHWpwAwGoAXgbeHYDAZ4BdB10cAMBlQGCARuCAXgDAYsBfh1+cAMBggE=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -247,7 +251,7 @@ new EmailCredentialDefault()</mca:CSharpValue>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="664.8,341.6" />
-      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="695.2,492.8" />
+      <sap2010:ViewStateData Id="ForEach`1_1" sap:VirtualizedContainerService.HintSize="243.2,52.8" />
       <sap2010:ViewStateData Id="SendEmail_1" sap:VirtualizedContainerService.HintSize="200,22.4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
