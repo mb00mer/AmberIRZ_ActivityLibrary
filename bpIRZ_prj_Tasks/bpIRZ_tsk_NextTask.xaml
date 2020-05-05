@@ -44,7 +44,6 @@
       <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>System.Xml</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>bpIRZ_prj_KPA</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>bpIRZ_prj_Tasks</AssemblyReference>
     </sco:Collection>
@@ -204,10 +203,39 @@ TaskInfo.Single()["NextTaskOrder"] != null
                                           <ActivityAction.Argument>
                                             <DelegateInArgument x:TypeArguments="hwa:IRow" Name="item" />
                                           </ActivityAction.Argument>
-                                          <hwa:Task DisplayName="Create task" sap2010:WorkflowViewState.IdRef="Task_14" StatusTask="tsInWork">
-                                            <hwa:Task.Dependency>
-                                              <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
-                                                <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
+                                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_18">
+                                            <Sequence.Variables>
+                                              <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="ExistedTaskList" />
+                                            </Sequence.Variables>
+                                            <hwa:Select DisplayName="Select the same active task" sap2010:WorkflowViewState.IdRef="Select_14" Query="select &#xA; a.id as id&#xA;from &#xA; Tasks a &#xA; left join TaskStatus b on a.Status = b.Id&#xD;&#xA;where a.Project = @ProjectId and b.Code = @ActiveStatus and a.Process = @BPCode and a.ProcessStep = @BPStep">
+                                              <hwa:Select.Params>
+                                                <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                                  <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt; ()
+            {
+                { "@ProjectId", (int)TaskInfo.Single()["ProjectId"] },
+                { "@ActiveStatus", "tsInWork" },
+                { "@BPCode", (string)TaskInfo.Single()["BPCode"] },
+                { "@BPStep", (string)item["Code"] }
+            }</mca:CSharpValue>
+                                                </InArgument>
+                                              </hwa:Select.Params>
+                                              <hwa:Select.Result>
+                                                <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
+                                                  <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">ExistedTaskList</mca:CSharpReference>
+                                                </OutArgument>
+                                              </hwa:Select.Result>
+                                            </hwa:Select>
+                                            <If DisplayName="Check - if no such task - create new" sap2010:WorkflowViewState.IdRef="If_1">
+                                              <If.Condition>
+                                                <InArgument x:TypeArguments="x:Boolean">
+                                                  <mca:CSharpValue x:TypeArguments="x:Boolean">ExistedTaskList.Count == 0</mca:CSharpValue>
+                                                </InArgument>
+                                              </If.Condition>
+                                              <If.Then>
+                                                <hwa:Task DisplayName="Create task" sap2010:WorkflowViewState.IdRef="Task_14" StatusTask="tsInWork">
+                                                  <hwa:Task.Dependency>
+                                                    <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                                      <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, object&gt;()
             {
                 { "Project", (int)TaskInfo.Single()["ProjectId"] },
                 { "CloseReasonByDefault", (string)item["CloseReasonByDefault"] },
@@ -216,39 +244,42 @@ TaskInfo.Single()["NextTaskOrder"] != null
                 { "ProjectAffecting", (int)item["ProjectAffectingId"] },
                 { "DaysToDueDate", -(int)item["Duration"] } 
             }</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.Dependency>
-                                            <hwa:Task.Duration>
-                                              <InArgument x:TypeArguments="x:TimeSpan">
-                                                <mca:CSharpValue x:TypeArguments="x:TimeSpan">new TimeSpan((int)item["Duration"], 0, 0, 0)</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.Duration>
-                                            <hwa:Task.Name>
-                                              <InArgument x:TypeArguments="x:String">
-                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.Name>
-                                            <hwa:Task.Owner>
-                                              <InArgument x:TypeArguments="x:Int32">
-                                                <mca:CSharpValue x:TypeArguments="x:Int32">(int)TaskInfo.Single()["OwnerId"]</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.Owner>
-                                            <hwa:Task.TaskId>
-                                              <OutArgument x:TypeArguments="x:Int32">
-                                                <mca:CSharpReference x:TypeArguments="x:Int32">TaskId</mca:CSharpReference>
-                                              </OutArgument>
-                                            </hwa:Task.TaskId>
-                                            <hwa:Task.TaskTarget>
-                                              <InArgument x:TypeArguments="x:String">
-                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.TaskTarget>
-                                            <hwa:Task.TypeTask>
-                                              <InArgument x:TypeArguments="x:String">
-                                                <mca:CSharpValue x:TypeArguments="x:String">(string)item["Type"]</mca:CSharpValue>
-                                              </InArgument>
-                                            </hwa:Task.TypeTask>
-                                          </hwa:Task>
+                                                    </InArgument>
+                                                  </hwa:Task.Dependency>
+                                                  <hwa:Task.Duration>
+                                                    <InArgument x:TypeArguments="x:TimeSpan">
+                                                      <mca:CSharpValue x:TypeArguments="x:TimeSpan">new TimeSpan((int)item["Duration"], 0, 0, 0)</mca:CSharpValue>
+                                                    </InArgument>
+                                                  </hwa:Task.Duration>
+                                                  <hwa:Task.Name>
+                                                    <InArgument x:TypeArguments="x:String">
+                                                      <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
+                                                    </InArgument>
+                                                  </hwa:Task.Name>
+                                                  <hwa:Task.Owner>
+                                                    <InArgument x:TypeArguments="x:Int32">
+                                                      <mca:CSharpValue x:TypeArguments="x:Int32">(int)TaskInfo.Single()["OwnerId"]</mca:CSharpValue>
+                                                    </InArgument>
+                                                  </hwa:Task.Owner>
+                                                  <hwa:Task.TaskId>
+                                                    <OutArgument x:TypeArguments="x:Int32">
+                                                      <mca:CSharpReference x:TypeArguments="x:Int32">TaskId</mca:CSharpReference>
+                                                    </OutArgument>
+                                                  </hwa:Task.TaskId>
+                                                  <hwa:Task.TaskTarget>
+                                                    <InArgument x:TypeArguments="x:String">
+                                                      <mca:CSharpValue x:TypeArguments="x:String">(string)item["Name"]</mca:CSharpValue>
+                                                    </InArgument>
+                                                  </hwa:Task.TaskTarget>
+                                                  <hwa:Task.TypeTask>
+                                                    <InArgument x:TypeArguments="x:String">
+                                                      <mca:CSharpValue x:TypeArguments="x:String">(string)item["Type"]</mca:CSharpValue>
+                                                    </InArgument>
+                                                  </hwa:Task.TypeTask>
+                                                </hwa:Task>
+                                              </If.Then>
+                                            </If>
+                                          </Sequence>
                                         </ActivityAction>
                                       </ParallelForEach>
                                       <FlowStep.Next>
@@ -346,14 +377,14 @@ TaskInfo.Single()["NextTaskOrder"] != null
     <x:Reference>__ReferenceID11</x:Reference>
     <x:Reference>__ReferenceID12</x:Reference>
     <x:Reference>__ReferenceID13</x:Reference>
-    <sads:DebugSymbol.Symbol>d1NEOlx+UHJvamVjdHNcQW1iZXJcQW1iZXJJUlpfQWN0aXZpdHlMaWJyYXJ5XGJwSVJaX3Byal9UYXNrc1xicElSWl90c2tfTmV4dFRhc2sueGFtbCg0A94CDwIBAUAJThYDAYkCUg9YIAMB/gF/HX+VAQMB/QFcEWscAwHkAYUBF4UBfAMB2QFwGXwmAwHNAbMCF78CJAMBwQGgAhetAiQDAbUBiAEXmQEgAwGeAZwBG6sBKAMBhwGvASGyAWQCAXyHAiOUAjACAXC2ASPCATACAWTFASf9ATkCAQJDD0YgAwGVAksPS3YDAYoCXRNjIAMB8QFkE2ogAwHlAXMfeSADAc4BtgIdvAIgAwHCAaMCHaoCIAMBtgGQAR2WAXoDAaoBiwEdiwFvAwGfAZ8BIaMBIAMBkwGoASGoAYgBAwGIAYoCKZECIAIBcbkBKb8BIAIBZcgBLcgBhAECAVnPASv7ATYCAQNgGWCJAQMB8gFnGWeJAQMB5gH4ATH4AYMBAgFN6QEx6QGPAQIBQfMBMfMBgwECATXuATHuAXwCASnPAYQBzwGOAQIBKNIBMdoBIAIBHOQBMeQBgwECARDfATHfAZ0BAgEE</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2RDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX3Rza19OZXh0VGFzay54YW1sLjMD/QIPAgEBPwlNFgMBugJRD1cgAwGvAn4dfpUBAwGuAlsRahwDAZUChAEXhAF8AwGKAm8ZeyYDAf4B0gIX3gIkAwHyAb8CF8wCJAMB5gGHAReYASADAc8BmwEbqgEoAwG4Aa4BIbEBZAMBrQGmAiOzAjADAaEBtQEjwQEwAwGVAcQBJ5wCOQIBAkIPRSADAcYCSg9KdgMBuwJcE2IgAwGiAmMTaSADAZYCch94IAMB/wHVAh3bAiADAfMBwgIdyQIgAwHnAY8BHZUBegMB2wGKAR2KAW8DAdABngEhogEgAwHEAacBIacBiAEDAbkBqQIpsAIgAwGiAbgBKb4BIAMBlgHHAS3HAYQBAwGKAc4BK5oCNgIBA18ZX4kBAwGjAmYZZokBAwGXAtIBLeMBOgIBb+QBLZkCMgIBBNUBM9sBIAIBfeABM+ABoQECAXDnATPnAYwBAgEF6wExlwI8AgESlAI3lAKJAQIBYoUCN4UClQECAVWPAjePAokBAgFIigI3igKCAQIBO+sBigHrAZQBAgE67gE39gEgAgEtgAI3gAKJAQIBIPsBN/sBowECARM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Select_11" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Select_12" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Sequence_17" sap:VirtualizedContainerService.HintSize="244,51">
+      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Select_11" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Select_12" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_17" sap:VirtualizedContainerService.HintSize="243.2,52.8">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -361,8 +392,8 @@ TaskInfo.Single()["NextTaskOrder"] != null
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Update_13" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Script_2" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="Update_13" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Script_2" sap:VirtualizedContainerService.HintSize="200,22.4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -373,7 +404,7 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">420,1289</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -381,28 +412,37 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">590,709</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">690,731 690,1259 520,1259 520,1289</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="243.2,62.4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Select_13" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Update_10" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Task_14" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="ParallelForEach`1_1" sap:VirtualizedContainerService.HintSize="244,51" />
+      <sap2010:ViewStateData Id="Select_13" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Update_10" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Select_14" sap:VirtualizedContainerService.HintSize="464,22.4" />
+      <sap2010:ViewStateData Id="Task_14" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,212" />
+      <sap2010:ViewStateData Id="Sequence_18" sap:VirtualizedContainerService.HintSize="486.4,399.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ParallelForEach`1_1" sap:VirtualizedContainerService.HintSize="243.2,52.8" />
       <sap2010:ViewStateData Id="FlowStep_63">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">58,1084.5</av:Point>
-            <av:Size x:Key="ShapeSize">244,51</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">180,1135.5 180,1165.5 520,1165.5 520,1289</av:PointCollection>
+            <av:Size x:Key="ShapeSize">243.2,52.8</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">179.6,1137.3 179.6,1167.3 520,1167.3 520,1289</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -410,29 +450,29 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">80,1029</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">180,1051 180,1084.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Update_11" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_11" sap:VirtualizedContainerService.HintSize="200,22.4" />
       <sap2010:ViewStateData Id="FlowStep_65">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">350,1029</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">450,1051 450,1081 520,1081 520,1289</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="99,87">
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="100,87.2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">240.5,906.5</av:Point>
-            <av:Size x:Key="ShapeSize">99,87</av:Size>
+            <av:Size x:Key="ShapeSize">100,87.2</av:Size>
             <av:PointCollection x:Key="TrueConnector">240.5,950 180,950 180,1029</av:PointCollection>
-            <av:PointCollection x:Key="FalseConnector">339.5,950 450,950 450,1029</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">340.5,950.1 450,950.1 450,1029</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -440,7 +480,7 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">190,809</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">290,831 290,906.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
@@ -449,41 +489,41 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">169,719</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">290,781 290,809</av:PointCollection>
+            <av:Size x:Key="ShapeSize">243.2,62.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">290.6,781.4 290,781.4 290,809</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Update_12" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_12" sap:VirtualizedContainerService.HintSize="200,22.4" />
       <sap2010:ViewStateData Id="FlowStep_67">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">710,629</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">810,651 810,1259 520,1259 520,1289</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Update_14" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Update_14" sap:VirtualizedContainerService.HintSize="200,22.4" />
       <sap2010:ViewStateData Id="FlowStep_71">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">470,779</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">570,801 570,1259 520,1259 520,1289</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowSwitch`1_1" sap:VirtualizedContainerService.HintSize="98,87">
+      <sap2010:ViewStateData Id="FlowSwitch`1_1" sap:VirtualizedContainerService.HintSize="94.4,87.2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">340,496.5</av:Point>
-            <av:Size x:Key="ShapeSize">98,87</av:Size>
-            <av:PointCollection x:Key="tsCancaledConnector">438,518.25 810,518.25 810,629</av:PointCollection>
+            <av:Size x:Key="ShapeSize">94.4,87.2</av:Size>
+            <av:PointCollection x:Key="tsCancaledConnector">434.4,518.3 810,518.3 810,629</av:PointCollection>
             <av:PointCollection x:Key="tsIsDoneConnector">340,518.25 290,518.25 290,719</av:PointCollection>
-            <av:PointCollection x:Key="Default">438,540 690,540 690,709</av:PointCollection>
-            <av:PointCollection x:Key="tsFrozenConnector">438,561.75 570,561.75 570,779</av:PointCollection>
+            <av:PointCollection x:Key="Default">434.4,540.1 690,540.1 690,709</av:PointCollection>
+            <av:PointCollection x:Key="tsFrozenConnector">434.4,561.9 570,561.9 570,779</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -491,17 +531,17 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">268,424.5</av:Point>
-            <av:Size x:Key="ShapeSize">244,51</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">390,475.5 390,496.5</av:PointCollection>
+            <av:Size x:Key="ShapeSize">243.2,52.8</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">389.6,477.3 387.2,477.3 387.2,496.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="70,87">
+      <sap2010:ViewStateData Id="FlowDecision_2" sap:VirtualizedContainerService.HintSize="70.4,87.2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">345,246.5</av:Point>
-            <av:Size x:Key="ShapeSize">70,87</av:Size>
+            <av:Size x:Key="ShapeSize">70.4,87.2</av:Size>
             <av:PointCollection x:Key="FalseConnector">415,290 930,290 930,1259 520,1259 520,1289</av:PointCollection>
             <av:PointCollection x:Key="TrueConnector">345,290 294,290 294,394.5 390,394.5 390,424.5</av:PointCollection>
           </scg:Dictionary>
@@ -511,17 +551,17 @@ TaskInfo.Single()["NextTaskOrder"] != null
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">280,149</av:Point>
-            <av:Size x:Key="ShapeSize">200,22</av:Size>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">380,171 380,246.5</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1054,2227">
+      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1054.4,2228">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">350,2.5</av:Point>
-            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:Size x:Key="ShapeSize">60,75.2</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">380,77.5 380,149</av:PointCollection>
             <x:Double x:Key="Width">1040</x:Double>
             <x:Double x:Key="Height">2191</x:Double>
@@ -529,7 +569,7 @@ TaskInfo.Single()["NextTaskOrder"] != null
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1094,2307" />
+      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1094.4,2308" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
