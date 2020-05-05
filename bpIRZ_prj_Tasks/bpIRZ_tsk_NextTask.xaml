@@ -78,9 +78,10 @@
         <FlowStep.Next>
           <FlowDecision x:Name="__ReferenceID3" DisplayName="Is BP task? " sap2010:WorkflowViewState.IdRef="FlowDecision_2">
             <FlowDecision.Condition>
-              <mca:CSharpValue x:TypeArguments="x:Boolean" xml:space="preserve">(TaskInfo.Single()["BPCode"] != null) &amp;&amp;
+              <mca:CSharpValue x:TypeArguments="x:Boolean" xml:space="preserve">!String.IsNullOrEmpty( (string)TaskInfo.Single()["BPCode"] ) &amp;&amp;
 ((string)TaskInfo.Single()["BPCode"] != "pbpNone")
 /*
+ * (TaskInfo.Single()["BPCode"] != null) &amp;&amp; 
 ( ((string)TaskInfo.Single()["TaskStatus"] == "tsIsDone") ||
   ((string)TaskInfo.Single()["TaskStatus"] == "tsCancaled")
 ) 
@@ -377,7 +378,7 @@ TaskInfo.Single()["NextTaskOrder"] != null
     <x:Reference>__ReferenceID11</x:Reference>
     <x:Reference>__ReferenceID12</x:Reference>
     <x:Reference>__ReferenceID13</x:Reference>
-    <sads:DebugSymbol.Symbol>d2RDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX3Rza19OZXh0VGFzay54YW1sLjMD/QIPAgEBPwlNFgMBugJRD1cgAwGvAn4dfpUBAwGuAlsRahwDAZUChAEXhAF8AwGKAm8ZeyYDAf4B0gIX3gIkAwHyAb8CF8wCJAMB5gGHAReYASADAc8BmwEbqgEoAwG4Aa4BIbEBZAMBrQGmAiOzAjADAaEBtQEjwQEwAwGVAcQBJ5wCOQIBAkIPRSADAcYCSg9KdgMBuwJcE2IgAwGiAmMTaSADAZYCch94IAMB/wHVAh3bAiADAfMBwgIdyQIgAwHnAY8BHZUBegMB2wGKAR2KAW8DAdABngEhogEgAwHEAacBIacBiAEDAbkBqQIpsAIgAwGiAbgBKb4BIAMBlgHHAS3HAYQBAwGKAc4BK5oCNgIBA18ZX4kBAwGjAmYZZokBAwGXAtIBLeMBOgIBb+QBLZkCMgIBBNUBM9sBIAIBfeABM+ABoQECAXDnATPnAYwBAgEF6wExlwI8AgESlAI3lAKJAQIBYoUCN4UClQECAVWPAjePAokBAgFIigI3igKCAQIBO+sBigHrAZQBAgE67gE39gEgAgEtgAI3gAKJAQIBIPsBN/sBowECARM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d2RDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX3Rza19OZXh0VGFzay54YW1sLjMD/gIPAgEBPwlNFgMBugJRD1ggAwGvAn8df5UBAwGuAlwRaxwDAZUChQEXhQF8AwGKAnAZfCYDAf4B0wIX3wIkAwHyAcACF80CJAMB5gGIAReZASADAc8BnAEbqwEoAwG4Aa8BIbIBZAMBrQGnAiO0AjADAaEBtgEjwgEwAwGVAcUBJ50COQIBAkIPRSADAcYCSg9KdgMBuwJdE2MgAwGiAmQTaiADAZYCcx95IAMB/wHWAh3cAiADAfMBwwIdygIgAwHnAZABHZYBegMB2wGLAR2LAW8DAdABnwEhowEgAwHEAagBIagBiAEDAbkBqgIpsQIgAwGiAbkBKb8BIAMBlgHIAS3IAYQBAwGKAc8BK5sCNgIBA2AZYIkBAwGjAmcZZ4kBAwGXAtMBLeQBOgIBb+UBLZoCMgIBBNYBM9wBIAIBfeEBM+EBoQECAXDoATPoAYwBAgEF7AExmAI8AgESlQI3lQKJAQIBYoYCN4YClQECAVWQAjeQAokBAgFIiwI3iwKCAQIBO+wBigHsAZQBAgE67wE39wEgAgEtgQI3gQKJAQIBIPwBN/wBowECARM=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
