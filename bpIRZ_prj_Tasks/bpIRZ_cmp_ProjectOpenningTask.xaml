@@ -44,7 +44,6 @@
       <AssemblyReference>System.Xaml</AssemblyReference>
       <AssemblyReference>System.Xml</AssemblyReference>
       <AssemblyReference>System.Xml.Linq</AssemblyReference>
-      <AssemblyReference>bpIRZ_prj_KPA</AssemblyReference>
       <AssemblyReference>mscorlib</AssemblyReference>
       <AssemblyReference>bpIRZ_prj_Tasks</AssemblyReference>
     </sco:Collection>
@@ -62,6 +61,7 @@
       <Variable x:TypeArguments="x:String" Name="TaskTypeCode" />
       <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="TasksList" />
       <Variable x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)" Name="ProjectList" />
+      <Variable x:TypeArguments="x:Int32" Name="TaskId" />
     </Flowchart.Variables>
     <Flowchart.StartNode>
       <FlowStep x:Name="__ReferenceID11" sap2010:WorkflowViewState.IdRef="FlowStep_73">
@@ -187,6 +187,11 @@ SysObjectCode == "Partners"</mca:CSharpValue>
                                           <mca:CSharpValue x:TypeArguments="x:Int32">SysObjectCode == "Partners" ? (int)PartnerInfo.Single()["OwnerId"] : (int)EventInfo.Single()["OwnerId"]</mca:CSharpValue>
                                         </InArgument>
                                       </hwa:Task.Owner>
+                                      <hwa:Task.TaskId>
+                                        <OutArgument x:TypeArguments="x:Int32">
+                                          <mca:CSharpReference x:TypeArguments="x:Int32">TaskId</mca:CSharpReference>
+                                        </OutArgument>
+                                      </hwa:Task.TaskId>
                                       <hwa:Task.TaskTarget>
                                         <InArgument x:TypeArguments="x:String">
                                           <mca:CSharpValue x:TypeArguments="x:String">"Открыть проект с компанией " + (string)PartnerInfo.Single()["PartnerName"]</mca:CSharpValue>
@@ -199,9 +204,34 @@ SysObjectCode == "Partners"</mca:CSharpValue>
                                       </hwa:Task.TypeTask>
                                     </hwa:Task>
                                     <FlowStep.Next>
-                                      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_60">
-                                        <hwa:Script SharpCode="{x:Null}" DisplayName="Finish 'bpIRZ_cmp_ProjectOpenningTask'" sap2010:WorkflowViewState.IdRef="Script_3" />
-                                      </FlowStep>
+                                      <FlowDecision x:Name="__ReferenceID14" DisplayName="This BP fired by Event? " sap2010:WorkflowViewState.IdRef="FlowDecision_4">
+                                        <FlowDecision.Condition>
+                                          <mca:CSharpValue x:TypeArguments="x:Boolean">EventId != null</mca:CSharpValue>
+                                        </FlowDecision.Condition>
+                                        <FlowDecision.True>
+                                          <FlowStep x:Name="__ReferenceID13" sap2010:WorkflowViewState.IdRef="FlowStep_75">
+                                            <hwa:Update DisplayName="(upd) Update event: link to project-opening task" sap2010:WorkflowViewState.IdRef="Update_1" Limit="None" Query="update Events&#xA;set &#xA;   Task = @TaskId&#xA;where id = @EventId">
+                                              <hwa:Update.Params>
+                                                <InArgument x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)">
+                                                  <mca:CSharpValue x:TypeArguments="scg:IReadOnlyDictionary(hwea:Code, x:Object)" xml:space="preserve">new Dictionary&lt;Code, Object&gt;()
+            {
+                { "@TaskId", TaskId },
+                { "@EventId", EventId }
+            }</mca:CSharpValue>
+                                                </InArgument>
+                                              </hwa:Update.Params>
+                                            </hwa:Update>
+                                            <FlowStep.Next>
+                                              <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_60">
+                                                <hwa:Script SharpCode="{x:Null}" DisplayName="Finish 'bpIRZ_cmp_ProjectOpenningTask'" sap2010:WorkflowViewState.IdRef="Script_3" />
+                                              </FlowStep>
+                                            </FlowStep.Next>
+                                          </FlowStep>
+                                        </FlowDecision.True>
+                                        <FlowDecision.False>
+                                          <x:Reference>__ReferenceID0</x:Reference>
+                                        </FlowDecision.False>
+                                      </FlowDecision>
                                     </FlowStep.Next>
                                   </FlowStep>
                                 </FlowStep.Next>
@@ -301,7 +331,9 @@ SysObjectCode == "Partners"</mca:CSharpValue>
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID11</x:Reference>
     <x:Reference>__ReferenceID12</x:Reference>
-    <sads:DebugSymbol.Symbol>d29DOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2NtcF9Qcm9qZWN0T3Blbm5pbmdUYXNrLnhhbWwmNAOxAg8CAQE7CztYAgECRAlNEgMBlAJRD1QuAwGJAt8BEeoBGgMB8gHtARX7ASIDAdsB/wEbgQI5AwHQAcsBKcsBrAEDAc8BhQIdkAImAwG4AWYVdyIDAaEBehmKASYDAYoBjgEfjwErAgF/kwEhoQEuAgFopAElyAEwAgEkWBFjGgIBDUs0S0UDAaACRw9HYQMBlQLnARfnAW0DAf4B4gEX4gFvAwHzAfABG/MBIAMB5wH4ARv4AYMBAwHcAY0CI40ChAEDAcQBiAIjiAJxAwG5AWkbbyADAa0BdBt0gwEDAaIBfR+CASADAZYBhwEfhwGJAQMBiwGWASeZASACAXSeASeeAZEBAgFpxQErxQF1AgFduwEruwHPAQIBUsABK8ABtAECAUekAZsBpAGlAQIBRqcBK6wBIAIBO7YBK7YBtAECATCxASuxAYQBAgElYBdgYQIBGVsXW2UCAQ4=</sads:DebugSymbol.Symbol>
+    <x:Reference>__ReferenceID13</x:Reference>
+    <x:Reference>__ReferenceID14</x:Reference>
+    <sads:DebugSymbol.Symbol>d29DOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2NtcF9Qcm9qZWN0T3Blbm5pbmdUYXNrLnhhbWwqMwPRAg8CAQE6CzpYAgECRAlNEgMB0QJRD1QuAwHFAv0BEYgCGgMBrAKLAhWZAiIDAZMCnQIbnwI5AwGHAuIBMeIBtAEDAYYCowIdrgImAwHtAWYVdyIDAdQBehmKASYDAbsBjgEfjwErAwGvAZMBIaEBLgMBlgGkASXNATACAUDRASvRAXkCATTVAS3fAToCASdYEWMaAgEOSzRLRQMB3gJHD0dhAwHSAoUCF4UCbQMBuQKAAheAAm8DAa0CjgIbkQIgAwGgApYCG5YCgwEDAZQCqwIjqwKEAQMB+gGmAiOmAnEDAe4BaRtvIAMB4QF0G3SDAQMB1QF9H4IBIAMByAGHAR+HAYkBAwG8AZYBJ5kBIAMBowGeASeeAZEBAwGXAcoBK8oBdQMBigG7ASu7Ac8BAgF+xQErxQG0AQIBcsABK8ABdgIBZqQBmwGkAaUBAgFlpwErrAEgAgFZtgErtgG0AQIBTbEBK7EBhAECAUHYATPcASACAShgF2BhAgEbWxdbZQIBDw==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -319,11 +351,12 @@ SysObjectCode == "Partners"</mca:CSharpValue>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Select_16" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Select_17" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Select_14" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Task_12" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Script_3" sap:VirtualizedContainerService.HintSize="200,22">
+      <sap2010:ViewStateData Id="Select_16" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Select_17" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Select_14" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Task_12" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Update_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Script_3" sap:VirtualizedContainerService.HintSize="200,22.4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -338,32 +371,52 @@ SysObjectCode == "Partners"</mca:CSharpValue>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_75">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">80,1298.8</av:Point>
+            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">180,1321.2 180,1351.2 540,1351.2 540,1379</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowDecision_4" sap:VirtualizedContainerService.HintSize="126.4,87.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">116.8,1156.4</av:Point>
+            <av:Size x:Key="ShapeSize">126.4,87.2</av:Size>
+            <av:PointCollection x:Key="TrueConnector">116.8,1200 90,1200 90,1268.8 180,1268.8 180,1298.8</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">243.2,1200 540,1200 540,1379</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_61">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">80,1189</av:Point>
+            <av:Point x:Key="ShapeLocation">80,1108.8</av:Point>
             <av:Size x:Key="ShapeSize">200,22.4</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">180,1211 180,1241 540,1241 540,1379</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">180,1131.2 180,1156.4</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_64">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">80,1119</av:Point>
+            <av:Point x:Key="ShapeLocation">80,1058.8</av:Point>
             <av:Size x:Key="ShapeSize">200,22.4</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">180,1141 180,1189</av:PointCollection>
+            <av:PointCollection x:Key="ConnectorLocation">180,1081.2 180,1108.8</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="157,87">
+      <sap2010:ViewStateData Id="FlowDecision_3" sap:VirtualizedContainerService.HintSize="156,87.2">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">271.5,936.5</av:Point>
-            <av:Size x:Key="ShapeSize">156.8,87.2</av:Size>
-            <av:PointCollection x:Key="TrueConnector">271.5,980 180,980 180,1119</av:PointCollection>
-            <av:PointCollection x:Key="FalseConnector">428.5,980 540,980 540,1379</av:PointCollection>
+            <av:Size x:Key="ShapeSize">156,87.2</av:Size>
+            <av:PointCollection x:Key="TrueConnector">271.5,980.1 180,980.1 180,1058.8</av:PointCollection>
+            <av:PointCollection x:Key="FalseConnector">427.5,980.1 540,980.1 540,1379</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -402,7 +455,7 @@ SysObjectCode == "Partners"</mca:CSharpValue>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="Select_15" sap:VirtualizedContainerService.HintSize="200,22.4" />
-      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="243.2,62.4">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -413,7 +466,7 @@ SysObjectCode == "Partners"</mca:CSharpValue>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">379,689</av:Point>
-            <av:Size x:Key="ShapeSize">241.6,62.4</av:Size>
+            <av:Size x:Key="ShapeSize">243.2,62.4</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">500,751 500,781 350,781 350,829</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
