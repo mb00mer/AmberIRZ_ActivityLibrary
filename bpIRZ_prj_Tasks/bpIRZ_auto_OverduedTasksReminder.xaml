@@ -58,7 +58,7 @@
     </Flowchart.Variables>
     <Flowchart.StartNode>
       <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_62">
-        <hwa:Select DisplayName="(S) Load EmailList from DB" sap2010:WorkflowViewState.IdRef="Select_10" Query="select &#xA; b.Email as email,&#xD;&#xA; b.Tasks as tasks,&#xA; b.Priority as priority&#xA;from TaskPostponementReminderList b">
+        <hwa:Select DisplayName="(S) Load EmailList from DB" sap2010:WorkflowViewState.IdRef="Select_10" Query="select &#xA; b.Email as email,&#xA; b.Tasks as tasks,&#xA; b.Priority as priority&#xA;from TaskPostponementReminderList b">
           <hwa:Select.Result>
             <OutArgument x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">
               <mca:CSharpReference x:TypeArguments="scg:IReadOnlyCollection(hwa:IRow)">DBEmailList</mca:CSharpReference>
@@ -97,7 +97,7 @@
                         </Assign.To>
                         <Assign.Value>
                           <InArgument x:TypeArguments="x:String">
-                            <mca:CSharpValue x:TypeArguments="x:String">(string)item["email"] /*"mb00mer@mail.ru*/</mca:CSharpValue>
+                            <mca:CSharpValue x:TypeArguments="x:String">(string)item["email"]</mca:CSharpValue>
                           </InArgument>
                         </Assign.Value>
                       </Assign>
@@ -109,8 +109,7 @@
                         </Assign.To>
                         <Assign.Value>
                           <InArgument x:TypeArguments="x:String">
-                            <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">(string)item["tasks"]
-/*"&lt;tr&gt;&lt;td&gt;&lt;li&gt;&lt;a href=\"https://crm.irz.ru:8443/registry/cards/ActivityEditCard?params=%7B%22id%22:%2215153%22%7D\"&gt;Подписать PO на 10 12-пульсных СУ&lt;/a&gt;&lt;/li&gt;&lt;/td&gt;&lt;td&gt;БП Поставка 10 12-пульсных СУ в Южный Судан&lt;/td&gt;&lt;td&gt; \"Canadian Emirates Western Engineering Co. LLC.\"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;li&gt;&lt;a href=\"https://crm.irz.ru:8443/registry/cards/ActivityEditCard?params=%7B%22id%22:%2217333%22%7D\"&gt;Заключить договор&lt;/a&gt;&lt;/li&gt;&lt;/td&gt;&lt;td&gt;Поставка 26 СУ ЭЦН в Венесуэлу (630А, 800А)&lt;/td&gt;&lt;td&gt; \"Yilan Mateus\"&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;li&gt;&lt;a href=\"https://crm.irz.ru:8443/registry/cards/ActivityEditCard?params=%7B%22id%22:%2217609%22%7D\"&gt;Согласовать ТКП с заказчиком&lt;/a&gt;&lt;/li&gt;&lt;/td&gt;&lt;td&gt;Поставка 20 х 12-п СУ ЭЦН в Венесуэлу (Petroquiriquiri)&lt;/td&gt;&lt;td&gt;Kentodal&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;li&gt;&lt;a href=\"https://crm.irz.ru:8443/registry/cards/ActivityEditCard?params=%7B%22id%22:%2217702%22%7D\"&gt;Согласовать ТКП с заказчиком&lt;/a&gt;&lt;/li&gt;&lt;/td&gt;&lt;td&gt;Поставка 160 СУ ШГН в Венесуэлу&lt;/td&gt;&lt;td&gt;Kentodal&lt;/td&gt;&lt;/tr&gt;"*/</mca:CSharpValue>
+                            <mca:CSharpValue x:TypeArguments="x:String">(string)item["tasks"]</mca:CSharpValue>
                           </InArgument>
                         </Assign.Value>
                       </Assign>
@@ -135,8 +134,7 @@
                           </hwa:SendEmail.Credential>
                           <hwa:SendEmail.To>
                             <InArgument x:TypeArguments="scg:IReadOnlyCollection(x:String)">
-                              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyCollection(x:String)" xml:space="preserve">new List&lt;string&gt; { email }
-/*(IReadOnlyCollection&lt;String&gt;)new List&lt;string&gt;({ (string)item["email"] })*/</mca:CSharpValue>
+                              <mca:CSharpValue x:TypeArguments="scg:IReadOnlyCollection(x:String)">new List&lt;string&gt; { email }</mca:CSharpValue>
                             </InArgument>
                           </hwa:SendEmail.To>
                         </hwa:SendEmail>
@@ -183,11 +181,21 @@
                 </FlowDecision.Condition>
                 <FlowDecision.True>
                   <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_85">
-                    <hwa:SendEmail Body="Появились новые запросы на изменения, которые ждут Вашего подтверждения! Для просмотра перейдите по ссылке https://crm.irz.ru:8443/registry/Postponements" DisplayName="SendEmail (EmailListThree)" sap2010:WorkflowViewState.IdRef="SendEmail_9" Subject="Amber. Появились запросы на изменения!">
+                    <hwa:SendEmail DisplayName="SendEmail (EmailListThree)" Format="Html" sap2010:WorkflowViewState.IdRef="SendEmail_9" Subject="Amber. Появились запросы на изменения!">
+                      <hwa:SendEmail.Bcc>
+                        <InArgument x:TypeArguments="scg:IReadOnlyCollection(x:String)">
+                          <mca:CSharpValue x:TypeArguments="scg:IReadOnlyCollection(x:String)">new List&lt;string&gt; { "mb00mer@mail.ru" }</mca:CSharpValue>
+                        </InArgument>
+                      </hwa:SendEmail.Bcc>
+                      <hwa:SendEmail.Body>
+                        <InArgument x:TypeArguments="x:String">
+                          <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"&lt;p style=\"color: red;\"&gt;&lt;strong&gt;У Вас появились новые запросы на изменения.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Postponements\"&gt;https://crm.irz.ru:8443/registry/Postponements&lt;/a&gt; для их утверждения.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Рыкову Александру:&lt;br&gt;тел.: +7 (912) 460 54 85, e-mail: rykov.ae@irz.ru&lt;/p&gt;"
+/*"Появились новые запросы на изменения, которые ждут Вашего подтверждения! Для просмотра перейдите по ссылке https://crm.irz.ru:8443/registry/Postponements"*/</mca:CSharpValue>
+                        </InArgument>
+                      </hwa:SendEmail.Body>
                       <hwa:SendEmail.Credential>
                         <InArgument x:TypeArguments="hwa:EmailCredential">
-                          <mca:CSharpValue x:TypeArguments="hwa:EmailCredential" xml:space="preserve">// new EmailCredentialUser(1)
-new EmailCredentialDefault()</mca:CSharpValue>
+                          <mca:CSharpValue x:TypeArguments="hwa:EmailCredential">new EmailCredentialDefault()</mca:CSharpValue>
                         </InArgument>
                       </hwa:SendEmail.Credential>
                       <hwa:SendEmail.To>
@@ -217,46 +225,46 @@ new EmailCredentialDefault()</mca:CSharpValue>
     <x:Reference>__ReferenceID3</x:Reference>
     <x:Reference>__ReferenceID4</x:Reference>
     <x:Reference>__ReferenceID0</x:Reference>
-    <sads:DebugSymbol.Symbol>d3JDOlxVc2Vyc1xtaWtoYWlsLmJhcmFuY2hpa1xQcm9qZWN0c1xBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2F1dG9fT3ZlcmR1ZWRUYXNrc1JlbWluZGVyLnhhbWwlMgPdAQ8CAQE3CzdsAgECPQlDFgMBqwFGDbIBFwIBHrYBE7YBbQIBGMkBGckBnwECARe6ARXGASUCAQhAD0B5AwGsAUkTSW0DAaUBUBGwARYCAR+9ARu+AS8CARHDARvDAaMBAgELugEpugHEAQIBCroBpAK6AcwCAgEJUxdTawIBIFcVrgEgAgEnXBdnIAMBkgFoF3QgAgF/dRetASACAShkHWSFAQMBnAFfHV9oAwGTAXAdcf8JAwGJAWsda2gDAYABeB14bwIBKXsZjgEpAgFijwEZogEpAgFFowEZrAErAgEyhQEfhQGEAQIBdooBH4sBawIBbX4fgAHVAwIBZHuWAXu5AQIBY5kBH5kBhAECAVmeAR+fAWsCAVCSAR+UAYsEAgFHjwGXAY8BswECAUaqAR2qAXoCATymAR+mAWICATM=</sads:DebugSymbol.Symbol>
+    <sads:DebugSymbol.Symbol>d1dEOlxBbWJlclxBbWJlcklSWl9BY3Rpdml0eUxpYnJhcnlcYnBJUlpfcHJqX1Rhc2tzXGJwSVJaX2F1dG9fT3ZlcmR1ZWRUYXNrc1JlbWluZGVyLnhhbWwmMgPlAQ8CAQE3CzdsAgECPQlDFgMBtgFGDbABFwIBKbQBE7QBbQIBI9EBGdEBnwECASK4ARXOASUCAQhAD0B5AwG3AUkTSW0DAbABUBGuARYCASrGARvGAYABAgEcywEbywGjAQIBFrsBG7sBngECARDAARvBAbIBAgEKuAGRAbgBuQECAQlTF1NrAgErVxWsASACATJcF2cgAwGdAWgXcyADAYoBdBerASACATNkHWRwAwGnAV8dX2gDAZ4BcB1wcAMBlAFrHWtoAwGLAXcdd28CATR6GYwBKQIBbY0BGaABKQIBUKEBGaoBKwIBPYQBH4QBhAEDAYEBiQEfiQGWAQIBeH0ff9UDAgFvepYBerkBAgFulwEflwGEAQIBZJwBH50BawIBW5ABH5IBiwQCAVKNAZcBjQGzAQIBUagBHagBegIBR6QBH6QBYgIBPg==</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22.4" />
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="477.6,62.4" />
-      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="477.6,62.4" />
-      <sap2010:ViewStateData Id="SendEmail_7" sap:VirtualizedContainerService.HintSize="200,22.4">
+      <sap2010:ViewStateData Id="Select_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="477,62" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="477,62" />
+      <sap2010:ViewStateData Id="SendEmail_7" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="SendEmail_8" sap:VirtualizedContainerService.HintSize="200,22.4">
+      <sap2010:ViewStateData Id="SendEmail_8" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="AddToCollection`1_10" sap:VirtualizedContainerService.HintSize="200,22.4" />
-      <sap2010:ViewStateData Id="Switch`1_2" sap:VirtualizedContainerService.HintSize="477.6,189.6" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="500,519.2">
+      <sap2010:ViewStateData Id="AddToCollection`1_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Switch`1_2" sap:VirtualizedContainerService.HintSize="477,290" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="499,618">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="687.2,671.2" />
-      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="717.6,822.4" />
-      <sap2010:ViewStateData Id="SendEmail_9" sap:VirtualizedContainerService.HintSize="200,22.4">
+      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="690,768" />
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="244,51" />
+      <sap2010:ViewStateData Id="SendEmail_9" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Script_4" sap:VirtualizedContainerService.HintSize="200,22.4">
+      <sap2010:ViewStateData Id="Script_4" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -267,7 +275,7 @@ new EmailCredentialDefault()</mca:CSharpValue>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">260,538.8</av:Point>
-            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -275,17 +283,17 @@ new EmailCredentialDefault()</mca:CSharpValue>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">170,418.8</av:Point>
-            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">270,441.2 270,471.2 360,471.2 360,538.8</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowDecision_8" sap:VirtualizedContainerService.HintSize="135.2,87.2">
+      <sap2010:ViewStateData Id="FlowDecision_8" sap:VirtualizedContainerService.HintSize="136,87">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">312.4,276.4</av:Point>
-            <av:Size x:Key="ShapeSize">135.2,87.2</av:Size>
+            <av:Size x:Key="ShapeSize">136,87</av:Size>
             <av:PointCollection x:Key="TrueConnector">312.4,320 270,320 270,418.8</av:PointCollection>
             <av:PointCollection x:Key="FalseConnector">447.6,320 477.6,320 477.6,508.8 360,508.8 360,538.8</av:PointCollection>
           </scg:Dictionary>
@@ -295,8 +303,8 @@ new EmailCredentialDefault()</mca:CSharpValue>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">258.4,183.6</av:Point>
-            <av:Size x:Key="ShapeSize">243.2,52.8</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">380,236.4 380,276.4</av:PointCollection>
+            <av:Size x:Key="ShapeSize">244,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">380.4,234.6 380.4,276.4</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -304,17 +312,17 @@ new EmailCredentialDefault()</mca:CSharpValue>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">280,119</av:Point>
-            <av:Size x:Key="ShapeSize">200,22.4</av:Size>
+            <av:Size x:Key="ShapeSize">200,22</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">380,141.4 380,183.6</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1254.4,2228">
+      <sap2010:ViewStateData Id="Flowchart_8" sap:VirtualizedContainerService.HintSize="1254,2227">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
             <av:Point x:Key="ShapeLocation">350,2.5</av:Point>
-            <av:Size x:Key="ShapeSize">60,75.2</av:Size>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">380,77.5 380,119</av:PointCollection>
             <x:Double x:Key="Width">1240</x:Double>
             <x:Double x:Key="Height">2191</x:Double>
@@ -322,7 +330,7 @@ new EmailCredentialDefault()</mca:CSharpValue>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1294.4,2308" />
+      <sap2010:ViewStateData Id="bpIRZ_prj_KPA.Activity1_1" sap:VirtualizedContainerService.HintSize="1294,2307" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
