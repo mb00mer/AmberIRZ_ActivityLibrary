@@ -124,7 +124,7 @@
                             <InArgument x:TypeArguments="x:String">
                               <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"&lt;p style=\"color: rgb(237,125,49);\"&gt;&lt;strong&gt;У Вас появились задачи, у которых завершён плановый период выполнения.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Список задач:&lt;/p&gt;&lt;table&gt;&lt;ul&gt;"
 + tasks
-+ "&lt;/ul&gt;&lt;/table&gt;&lt;p&gt;Перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Activity\"&gt;https://crm.irz.ru:8443/registry/Activity&lt;/a&gt; и сформируйте запросы на переносы сроков выполнения задач.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Рыкову Александру:&lt;br&gt;тел.: +7 (912) 460 54 85, e-mail: rykov.ae@irz.ru&lt;/p&gt;"</mca:CSharpValue>
++ "&lt;/ul&gt;&lt;/table&gt;&lt;p&gt;Перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Activity\"&gt;https://crm.irz.ru:8443/registry/Activity&lt;/a&gt; и сформируйте запросы на переносы сроков выполнения задач.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Невьянцеву Сергею:&lt;br&gt;тел.: +7 (982) 11 767 82, e-mail: nevyantsev@irz.ru&lt;/p&gt;"</mca:CSharpValue>
                             </InArgument>
                           </hwa:SendEmail.Body>
                           <hwa:SendEmail.Credential>
@@ -143,7 +143,7 @@
                             <InArgument x:TypeArguments="x:String">
                               <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"&lt;p style=\"color: red;\"&gt;&lt;strong&gt;У Вас появились задачи, у которых начался штрафной период выполнения.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Список задач:&lt;/p&gt;&lt;table&gt;&lt;ul&gt;"
  + tasks
-+ "&lt;/ul&gt;&lt;/table&gt;&lt;p&gt;&lt;span style=\"color: red;\"&gt;Срочно&lt;/span&gt; перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Activity\"&gt;https://crm.irz.ru:8443/registry/Activity&lt;/a&gt; и сформируйте запросы на переносы сроков выполнения задач.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Рыкову Александру:&lt;br&gt;тел.: +7 (912) 460 54 85, e-mail: rykov.ae@irz.ru&lt;/p&gt;"</mca:CSharpValue>
++ "&lt;/ul&gt;&lt;/table&gt;&lt;p&gt;&lt;span style=\"color: red;\"&gt;Срочно&lt;/span&gt; перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Activity\"&gt;https://crm.irz.ru:8443/registry/Activity&lt;/a&gt; и сформируйте запросы на переносы сроков выполнения задач.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Невьянцеву Сергею:&lt;br&gt;тел.: +7 (982) 11 767 82, e-mail: nevyantsev@irz.ru&lt;/p&gt;"</mca:CSharpValue>
                             </InArgument>
                           </hwa:SendEmail.Body>
                           <hwa:SendEmail.Credential>
@@ -189,7 +189,7 @@
                       </hwa:SendEmail.Bcc>
                       <hwa:SendEmail.Body>
                         <InArgument x:TypeArguments="x:String">
-                          <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"&lt;p style=\"color: red;\"&gt;&lt;strong&gt;У Вас появились новые запросы на изменения.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Postponements\"&gt;https://crm.irz.ru:8443/registry/Postponements&lt;/a&gt; для их утверждения.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Рыкову Александру:&lt;br&gt;тел.: +7 (912) 460 54 85, e-mail: rykov.ae@irz.ru&lt;/p&gt;"
+                          <mca:CSharpValue x:TypeArguments="x:String" xml:space="preserve">"&lt;p style=\"color: red;\"&gt;&lt;strong&gt;У Вас появились новые запросы на изменения.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Перейдите по ссылке &lt;a href=\"https://crm.irz.ru:8443/registry/Postponements\"&gt;https://crm.irz.ru:8443/registry/Postponements&lt;/a&gt; для их утверждения.&lt;/p&gt;&lt;p style=\"color:rgb(128,128,128); font-size: smaller;\"&gt;По вопросам, связанным с работой CRM, необходимо обращаться к Невьянцеву Сергею:&lt;br&gt;тел.: +7 (982) 11 767 82, e-mail: nevyantsev@irz.ru&lt;/p&gt;"
 /*"Появились новые запросы на изменения, которые ждут Вашего подтверждения! Для просмотра перейдите по ссылке https://crm.irz.ru:8443/registry/Postponements"*/</mca:CSharpValue>
                         </InArgument>
                       </hwa:SendEmail.Body>
